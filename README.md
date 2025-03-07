@@ -16,7 +16,7 @@ sudo apt install git
 
 3. **Клонируйте репозиторий:** 
 ```
-git clone ссылка
+git clone https://github.com/Vova1707/YL_Community.git
 ```
 
 4. **Настройка проекта:**

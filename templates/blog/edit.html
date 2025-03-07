@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактировать запись{% endblock %}
+
+{% block content %}
+    <h1>Редактировать запись в блоге</h1>
+    <form method="POST" action="">
+        <div class="form-group">
+            <label for="title">Заголовок:</label>
+            <input type="text" class="form-control" id="title" name="title" value="{{ post.title }}" required>
+        </div>
+        <div class="form-group">
+            <label for="content">Содержание:</label>
+            <textarea class="form-control" id="content" name="content" rows="5" required>{{ post.content }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+        <a href="{{ url_for('blog.view_blog_post', post_id=post.id) }}" class="btn btn-secondary">Отмена</a>
+    </form>
+{% endblock %}
