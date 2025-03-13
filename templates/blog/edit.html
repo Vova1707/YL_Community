@@ -14,6 +14,6 @@
             <textarea class="form-control" id="content" name="content" rows="5" required>{{ post.content }}</textarea>
         </div>
         <button type="submit" class="btn btn-primary">Сохранить изменения</button>
-        <a href="{{ url_for('blog.view_blog_post', post_id=post.id) }}" class="btn btn-secondary">Отмена</a>
+        <a href="{{ url_for('profile.index', post_id=post.id) }}" class="btn btn-secondary">Отмена</a>
     </form>
 {% endblock %}
