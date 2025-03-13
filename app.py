@@ -2,6 +2,7 @@ from flask import Flask, render_template
 from flask_login import LoginManager, current_user
 from routes.profile_routes import profile_bp
 from routes.blog_routes import blog_bp
+from routes.project_routes import project_bp
 from settings import settings  # Импортируем settings
 from db_session import global_init, create_session
 from models.users import User
@@ -19,6 +20,7 @@ def load_user(user_id):
 
 app.register_blueprint(blog_bp)
 app.register_blueprint(profile_bp)
+app.register_blueprint(project_bp)
 
 
 @app.route('/')

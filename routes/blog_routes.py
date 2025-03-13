@@ -18,7 +18,7 @@ def create_blog_post():
         blog_post.author = user
         session.add(blog_post)
         session.commit()
-        return redirect(url_for('index'))
+        return redirect(url_for('profile.index'))
 
     return render_template('blog/create.html')
 
@@ -28,7 +28,8 @@ def view_blog_post(post_id):
     post = session.query(BlogPost).get(post_id)
     if not post:
         flash('Запись не найдена.', 'danger')
-        return redirect(url_for('index'))
+        return redirect(url_for('profile.index'))
+
     return render_template('blog/view.html', post=post)
 
 @blog_bp.route('/<int:post_id>/edit', methods=['GET', 'POST'])
@@ -38,7 +39,7 @@ def edit_blog_post(post_id):
     post = session.query(BlogPost).get(post_id)
     if not post:
         flash('Запись не найдена.', 'danger')
-        return redirect(url_for('index'))
+        return redirect(url_for('profile.index'))
 
     if request.method == 'POST':
         title = request.form.get('title')
@@ -49,8 +50,19 @@ def edit_blog_post(post_id):
             post.content = content
             session.commit()
             flash('Запись успешно обновлена!', 'success')
-            return redirect(url_for('blog.view_blog_post', post_id=post.id))
+            return redirect(url_for('profile.index', post_id=post.id))
         else:
             flash('Заголовок и содержимое обязательны.', 'danger')
 
     return render_template('blog/edit.html', post=post)
+
+@blog_bp.route('/<int:post_id>/delete')
+def delete(post_id):
+    session = create_session()
+    post = session.query(BlogPost).get(post_id)
+    if not post:
+        flash('Запись не найдена.', 'danger')
+        return redirect(url_for('profile.index'))
+    session.delete(post)
+    session.commit()
+    return redirect(url_for('profile.index'))
