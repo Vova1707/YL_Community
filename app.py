@@ -27,7 +27,18 @@ app.register_blueprint(rating_bp)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    news_data = []
+    for name_file in ["test_new_1", "test_new_2"]:
+        with open(f"static/txt/{name_file}.txt", "r", encoding="utf-8") as f:
+            new_data = list(map(lambda x: x.split("\n"), f.read().split("\n\n")))
+        new_header, new_date = new_data[0][0], new_data[-1][0]
+        new_data = new_data[1:-1]
+        print(new_header)
+        print(new_data)
+        print(new_date)
+        news_data.append([new_header, new_data, new_date])
+    # Дальше будет состовлятся список новостей из отдельной бд
+    return render_template('index.html', news_data=news_data)
 
 if __name__ == '__main__':
     global_init(app.config['DATABASE_URI'])
