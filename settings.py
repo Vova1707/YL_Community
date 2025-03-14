@@ -15,6 +15,7 @@ def settings(app):
     print(app.config['DEBUG'])
     if app.config['DEBUG']:
         toolbar = DebugToolbarExtension(app)
+        app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
     # Имена баз данных
     db_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'db', 'db.sqlite')
