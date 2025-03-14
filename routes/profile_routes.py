@@ -1,9 +1,11 @@
+from tkinter.font import names
+
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from db_session import create_session
 from models.users import User
 from werkzeug.security import check_password_hash, generate_password_hash
-from models.blog import BlogPost
+from models.blog import Poster
 
 profile_bp = Blueprint('profile', __name__, url_prefix='/profile')
 
@@ -20,20 +22,28 @@ def register():
             return render_template('register/register.html')
 
         session = create_session()
-        existing_user = session.query(User).filter((User.email == email) | (User.username == username)).first()
+        try:
+            existing_user = session.query(User).filter((User.email == email) | (User.name == username)).first()
 
-        if existing_user:
-            flash('Пользователь с таким email или именем уже существует.', 'danger')
-            return render_template('register/register.html')
+            if existing_user:
+                flash('Пользователь с таким email или именем уже существует.', 'danger')
+                return render_template('register/register.html')
 
-        hashed_password = generate_password_hash(password)
-        is_admin = True # Исправить
-        new_user = User(username=username, email=email, password_hash=hashed_password, is_admin=is_admin)
-        session.add(new_user)
-        session.commit()
+            hashed_password = generate_password_hash(password)
+            new_user = User(name=username, email=email, password_hash=hashed_password)  # Правильное присвоение значений экземпляру
+            session.add(new_user)
+            session.commit()
 
-        flash('Регистрация прошла успешно! Пожалуйста, войдите.', 'success')
-        return redirect(url_for('profile.login'))
+            flash('Регистрация прошла успешно! Пожалуйста, войдите.', 'success')
+            return redirect(url_for('profile.login'))
+
+        except Exception as e:
+            session.rollback()
+            flash(f'An error occurred: {str(e)}', 'danger')  # Show error to user.
+            return render_template('register/register.html') # Return to register page on error
+
+        finally:
+            session.close()  # Закрываем сессию в блоке finally
 
     return render_template('register/register.html')
 
@@ -68,7 +78,7 @@ def index():
     # Достаём id и имя проектов из нужной бд и передаём аргументом
     # Достаём блоги
     session = create_session()
-    posts = session.query(BlogPost).filter(BlogPost.user_id == current_user.id)
+    posts = session.query(Poster).filter(Poster.user_id == current_user.id)
     # if not post:
     #     flash('Запись не найдена.', 'danger')
     #     return redirect(url_for('index'))

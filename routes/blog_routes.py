@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
 from db_session import create_session
-from models.blog import BlogPost
+from models.blog import Poster
 from models.users import User
 
 blog_bp = Blueprint('blog', __name__, url_prefix='/blog')
@@ -11,10 +11,10 @@ blog_bp = Blueprint('blog', __name__, url_prefix='/blog')
 def create_blog_post():
     if request.method == 'POST':
         title = request.form.get('title')
-        content = request.form.get('content')
+        description = request.form.get('content')
         session = create_session()
         user = session.query(User).get(current_user.id)
-        blog_post = BlogPost(title=title, content=content)
+        blog_post = Poster(title=title, description=description, user_id=current_user.id)
         blog_post.author = user
         session.add(blog_post)
         session.commit()
@@ -25,7 +25,7 @@ def create_blog_post():
 @blog_bp.route('/<int:post_id>')
 def view_blog_post(post_id):
     session = create_session()
-    post = session.query(BlogPost).get(post_id)
+    post = session.query(Poster).get(post_id)
     if not post:
         flash('Запись не найдена.', 'danger')
         return redirect(url_for('profile.index'))
@@ -36,7 +36,7 @@ def view_blog_post(post_id):
 @login_required
 def edit_blog_post(post_id):
     session = create_session()
-    post = session.query(BlogPost).get(post_id)
+    post = session.query(Poster).get(post_id)
     if not post:
         flash('Запись не найдена.', 'danger')
         return redirect(url_for('profile.index'))
@@ -59,7 +59,7 @@ def edit_blog_post(post_id):
 @blog_bp.route('/<int:post_id>/delete')
 def delete(post_id):
     session = create_session()
-    post = session.query(BlogPost).get(post_id)
+    post = session.query(Poster).get(post_id)
     if not post:
         flash('Запись не найдена.', 'danger')
         return redirect(url_for('profile.index'))

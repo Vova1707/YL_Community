@@ -32,3 +32,5 @@ git clone https://github.com/Vova1707/YL_Community.git
     ```
     source .venv/bin/activate
     ```
+6. Структура базы данных
+   ![](ER.jpg)

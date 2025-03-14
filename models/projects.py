@@ -1,23 +1,18 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Enum, LargeBinary
 from sqlalchemy.orm import relationship
 from db_session import SqlAlchemyBase
 from datetime import datetime
 
 
-class Projects(SqlAlchemyBase):
-    __tablename__ = 'projects'
+class Project(SqlAlchemyBase):
+    __tablename__ = 'project'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    title = Column(String, nullable=False)
-    content = Column(Text, nullable=False)
-    category = Column(Text, nullable=False) # категория проекта(связь один с одним)
-    tags = Column(Text, nullable=False) # теги (связь один со многим)
-    files = Column(Text, nullable=False) # файлы(думаю просто rar архив достаточно)
-    links = Column(Text, nullable=False) # список ссылок
-    created_at = Column(DateTime, default=datetime.now())
-    user_id = Column(Integer, ForeignKey('users.id'))
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    title = Column(String(100), nullable=False, default='title')
+    description = Column(Text, nullable=True, default='description')
+    category = Column(Enum('web', 'mobile', 'data_science', name='project_category'), nullable=False)
+    rar = Column(LargeBinary, nullable=True, default=None) # полюшко для хравения rar
 
-    def __repr__(self):
-        return f'<Project {self.title} for user for id={self.user_id}>'
-
-'''Здесь ещё модели: category, tags пока'''
+    # Внешние ключи
+    user = relationship("User", back_populates="projects")
