@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html lang="ru">
+
+<html lang="en" data-bs-theme="light"> <!-- lang="ru" -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %} - YL Community</title>
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-          crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">-
+{#    <link rel="stylesheet"#}
+{#          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"#}
+{#          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"#}
+{#          crossorigin="anonymous">#}
     <!-- https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css -->
     <!-- https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.css -->
     <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}"> -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <header class="navbar navbar-expand-lg navbar-dark bg-dark"> <!-- navbar navbar-expand-lg navbar-light bg-light -->
+    <header class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="{{ url_for('index') }}">YL Community</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -26,6 +28,35 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('rating.index') }}">Рейтинг</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="" onclick="change_theme()"><span id="theme">Тема: Светлая</span></a>
+                    <!-- <a class="nav-link" href=change_theme()>Тема</a> -->
+                    <!-- <span id="theme">Тема: Светлая</span> -->
+                    <script>
+                        // Функция для обновления заголовка с текущей темой
+                        function update_theme(theme) {
+                            const themeTitle = document.getElementById('theme');
+                            themeTitle.innerText = `Тема: ${theme === 'light' ? 'Светлая' : 'Тёмная'}`;
+                        }
+
+                        // Функция для смены темы
+                        function change_theme() {
+                            const htmlElement = document.documentElement;
+                            const currentTheme = htmlElement.getAttribute('data-bs-theme');
+                            const newTheme = currentTheme === 'light' ? 'dark' : 'light'; // Определяем новую тему
+                            htmlElement.setAttribute('data-bs-theme', newTheme); // Устанавливаем новую тему
+                            update_theme(newTheme); // Обновляем заголовок
+                            localStorage.setItem('theme', newTheme); // Сохраняем тему в localStorage
+                        }
+
+                        // Восстанавливаем тему при загрузке страницы
+                        window.addEventListener('DOMContentLoaded', () => {
+                            const savedTheme = localStorage.getItem('theme') || 'light'; // Проверяем сохранённую тему в localStorage
+                            document.documentElement.setAttribute('data-bs-theme', savedTheme); // Устанавливаем тему из localStorage
+                            update_theme(savedTheme); // Обновляем заголовок с текущей темой
+                        });
+                    </script>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
@@ -59,11 +90,13 @@
         {% block content %}{% endblock %}
     </div>
 
-    <footer class="mt-5 bg-light text-center py-3">
+    <!-- bg-light -->
+    <footer class="mt-5 bg-dark text-white text-center py-3">
         <p>&copy; 2025 YL Community</p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> -->
-    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>#}
 </body>
 </html>

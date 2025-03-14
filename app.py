@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for, request
 from flask_login import LoginManager, current_user
 from routes.profile_routes import profile_bp
 from routes.blog_routes import blog_bp
@@ -24,6 +24,7 @@ app.register_blueprint(profile_bp)
 app.register_blueprint(project_bp)
 app.register_blueprint(rating_bp)
 
+theme = "light"
 
 @app.route('/')
 def index():
@@ -33,12 +34,32 @@ def index():
             new_data = list(map(lambda x: x.split("\n"), f.read().split("\n\n")))
         new_header, new_date = new_data[0][0], new_data[-1][0]
         new_data = new_data[1:-1]
-        print(new_header)
-        print(new_data)
-        print(new_date)
+        # print(new_header)
+        # print(new_data)
+        # print(new_date)
         news_data.append([new_header, new_data, new_date])
     # Дальше будет состовлятся список новостей из отдельной бд
     return render_template('index.html', news_data=news_data)
+
+@app.context_processor
+def utility_change_theme():
+    return dict(change_theme=change_theme)
+
+def change_theme():
+    global theme
+    if theme == "light":
+        theme = "dark"
+    else:
+        theme = "light"
+    print(theme)
+    # print(request.url)
+    # print(request.path)
+    # print(request)
+    # return redirect(request.args.get("current_page"))
+    # print(current_page)
+    print(request.url)
+    # return redirect(url_for('index'))
+    return ""
 
 if __name__ == '__main__':
     global_init(app.config['DATABASE_URI'])
