@@ -4,7 +4,7 @@ from routes.profile_routes import profile_bp
 from routes.blog_routes import blog_bp
 from routes.project_routes import project_bp
 from routes.rating_score import rating_bp
-from settings import settings  # Импортируем settings
+from settings import settings
 from db_session import global_init, create_session
 from models.users import User
 

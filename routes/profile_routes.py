@@ -39,24 +39,19 @@ def register():
 
 @profile_bp.route('/login', methods=['GET', 'POST'])
 def login():
-    print(1)
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
         session = create_session()
         user = session.query(User).filter(User.email == email).first()
-        print(2)
         if user and check_password_hash(user.password_hash, password):
             login_user(user)
             flash('Вы успешно вошли!', 'success')
-            print(3)
             return redirect(url_for('index'))
         else:
             flash('Неверный email или пароль.', 'danger')
-            print(4)
             return render_template('register/login.html')
     print(request.method)
-    print(5)
     return render_template('register/login.html')
 
 @profile_bp.route('/logout')
