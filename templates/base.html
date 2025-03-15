@@ -1,66 +1,61 @@
 <!DOCTYPE html>
-
-<html lang="en" data-bs-theme="light"> <!-- lang="ru" -->
+<html lang="ru" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %} - YL Community</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 {#    <link rel="stylesheet"#}
 {#          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"#}
 {#          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"#}
 {#          crossorigin="anonymous">#}
     <!-- https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css -->
     <!-- https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.css -->
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}"> -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <header class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <header class="navbar sticky-top navbar-expand-lg" id="glass">
+        <!-- fixed-top -->
         <a class="navbar-brand" href="{{ url_for('index') }}">YL Community</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <!-- Ниже будет размещаться лого профиля -->
+{#        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">#}
+{#            <span class="navbar-toggler-icon"></span>#}
+{#        </button>#}
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('index') }}">Главная</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('rating.index') }}">Рейтинг</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="" onclick="change_theme()"><span id="theme">Тема: Светлая</span></a>
-                    <!-- <a class="nav-link" href=change_theme()>Тема</a> -->
-                    <!-- <span id="theme">Тема: Светлая</span> -->
                     <script>
                         // Функция для обновления заголовка с текущей темой
                         function update_theme(theme) {
+                            const htmlElement = document.documentElement;
                             const themeTitle = document.getElementById('theme');
                             themeTitle.innerText = `Тема: ${theme === 'light' ? 'Светлая' : 'Тёмная'}`;
+                            htmlElement.setAttribute('data-bs-theme', theme); // Устанавливаем новую тему
                         }
 
                         // Функция для смены темы
                         function change_theme() {
                             const htmlElement = document.documentElement;
-                            const currentTheme = htmlElement.getAttribute('data-bs-theme');
-                            const newTheme = currentTheme === 'light' ? 'dark' : 'light'; // Определяем новую тему
-                            htmlElement.setAttribute('data-bs-theme', newTheme); // Устанавливаем новую тему
-                            update_theme(newTheme); // Обновляем заголовок
+                            const newTheme = htmlElement.getAttribute('data-bs-theme') === 'light' ? 'dark' : 'light'; // Определяем новую тему
                             localStorage.setItem('theme', newTheme); // Сохраняем тему в localStorage
                         }
-
-                        // Восстанавливаем тему при загрузке страницы
                         window.addEventListener('DOMContentLoaded', () => {
                             const savedTheme = localStorage.getItem('theme') || 'light'; // Проверяем сохранённую тему в localStorage
-                            document.documentElement.setAttribute('data-bs-theme', savedTheme); // Устанавливаем тему из localStorage
                             update_theme(savedTheme); // Обновляем заголовок с текущей темой
-                        });
+                         });
                     </script>
                 </li>
             </ul>
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ms-auto">
+                <!-- mb-2 mb-lg-0 me-auto -->
                 {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('rating.index') }}">Рейтинг</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('profile.index') }}">Профиль</a>
                     </li>
@@ -91,7 +86,7 @@
     </div>
 
     <!-- bg-light -->
-    <footer class="mt-5 bg-dark text-white text-center py-3">
+    <footer class="mt-5 text-gray text-center py-3" id="glass">
         <p>&copy; 2025 YL Community</p>
     </footer>
 
