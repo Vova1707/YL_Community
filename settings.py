@@ -1,7 +1,6 @@
 import os
-from dotenv import load_dotenv
-from flask_debugtoolbar import DebugToolbarExtension
 
+from dotenv import load_dotenv
 
 def settings(app):
     load_dotenv()
@@ -12,10 +11,11 @@ def settings(app):
     # Основные настройки
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your_default_secret_key')
     app.config['DEBUG'] = os.environ.get('DEBUG', 'True').lower() == 'true'
-    print(app.config['DEBUG'])
-    if app.config['DEBUG']:
-        toolbar = DebugToolbarExtension(app)
-        app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+    UPLOAD_FOLDER = 'media'
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    # if app.config['DEBUG']:
+        # toolbar = DebugToolbarExtension(app)
+        # app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
     # Имена баз данных
     db_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'db', 'db.sqlite')

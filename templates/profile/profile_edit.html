@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Редактирование профиля{% endblock %}
+
+{% block content %}
+    <h1>Редактирование профиля</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                 {{ message }}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}  <!-- Это необходимо для защиты формы -->
+
+        <div class="form-group">
+            {{ form.name.label(class="form-label") }}
+            {{ form.name(class="form-control", placeholder="Введите имя") }}
+            {% if form.name.errors %}
+                <div class="text-danger">
+                    {% for error in form.name.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.surname.label(class="form-label") }}
+            {{ form.surname(class="form-control", placeholder="Введите фамилию") }}
+            {% if form.surname.errors %}
+                <div class="text-danger">
+                    {% for error in form.surname.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.about.label(class="form-label") }}
+            {{ form.about(class="form-control", placeholder="Расскажите о себе", rows="3") }}
+            {% if form.about.errors %}
+                <div class="text-danger">
+                    {% for error in form.about.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.age.label(class="form-label") }}
+            {{ form.age(class="form-control", placeholder="Введите возраст") }}
+            {% if form.age.errors %}
+                <div class="text-danger">
+                    {% for error in form.age.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control", placeholder="Введите email") }}
+            {% if form.email.errors %}
+                <div class="text-danger">
+                    {% for error in form.email.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.image_profile.label(class="form-label") }}
+            {{ form.image_profile(class="form-control-file") }}
+            {% if form.image_profile.errors %}
+                <div class="text-danger">
+                    {% for error in form.image_profile.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+{% endblock %}

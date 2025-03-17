@@ -1,5 +1,10 @@
+import os
+import uuid
+
 from flask import Flask, render_template, redirect, url_for, request
 from flask_login import LoginManager, current_user
+from werkzeug.utils import secure_filename
+
 from routes.profile_routes import profile_bp
 from routes.blog_routes import blog_bp
 from routes.project_routes import project_bp
