@@ -1,11 +1,11 @@
-from tkinter.font import names
-
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from db_session import create_session
+from models.blog import Poster
+from models.projects import Project
 from models.users import User
 from werkzeug.security import check_password_hash, generate_password_hash
-from models.blog import Poster
+
 
 profile_bp = Blueprint('profile', __name__, url_prefix='/profile')
 
@@ -75,11 +75,7 @@ def logout():
 @profile_bp.route('/index')
 def index():
     flash('Вы вошли в свой профиль.', 'info')
-    # Достаём id и имя проектов из нужной бд и передаём аргументом
-    # Достаём блоги
     session = create_session()
     posts = session.query(Poster).filter(Poster.user_id == current_user.id)
-    # if not post:
-    #     flash('Запись не найдена.', 'danger')
-    #     return redirect(url_for('index'))
-    return render_template('profile/profile.html', posts=posts)
+    projects = session.query(Project).filter(Project.user_id == current_user.id)
+    return render_template('profile/profile.html', posts=posts, projects=projects)

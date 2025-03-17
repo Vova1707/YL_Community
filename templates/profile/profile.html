@@ -6,78 +6,120 @@
     <h1>Профиль</h1>
 
     <div class="accordion" id="accordionPanelsStayOpenExample">
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-            Информация
-          </button>
-        </h2>
-        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
-          <div class="accordion-body">
-              <a role="button" class="btn btn-primary" href="">Редактировать</a>
-              <div class="container">
-                  <div class="row">
-                      <div class="col-3">
-                          <img src="{{ url_for('static', filename='img/empty_profile_img.png') }}" alt="Картинка не загрузилась" style="height: 200px; width: 200px" />
-                      </div>
-                      <div class="col">
-                          <div><strong>Имя:</strong> {{ current_user.username }}</div>
-                          <div><strong>Почта:</strong> {{ current_user.email }}</div>
-                          <div><strong>Описание:</strong> Пусто</div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-        </div>
-      </div>
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
-            Проекты
-          </button>
-        </h2>
-        <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
-          <div class="accordion-body">
-              <div><a role="button" class="btn btn-primary" href="">Создать проект</a></div>
-              <!--Здесь for-ом проходимся и выводим все проекты с id-->
-              <div><a role="button" class="btn btn-link" href="{{ url_for('project.open_project', id=1) }}">Название проект 1</a></div>
-          </div>
-        </div>
-      </div>
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-          <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
-            Посты
-          </button>
-        </h2>
-        <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
-            <div class="accordion-body">
-                <a role="button" class="btn btn-primary" href="{{ url_for('blog.create_blog_post') }}">Новая запись</a>
-                {% for post in posts %}
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="row" style="margin: 0 0">
-                                <div class="col">
-                                    <img src="{{ url_for('static', filename='img/empty_profile_img.png') }}" alt="Картинка не загрузилась" style="height: 40px; width: 40px" />
-                                    {{ current_user.username }}
-                                </div>
-                                <div class="col-auto">
-                                    <a role="button" class="btn btn-primary" href="{{ url_for('blog.edit_blog_post', post_id=post.id) }}">Редактировать</a>
-                                    <a role="button" class="btn btn-primary" href="{{ url_for('blog.delete', post_id=post.id) }}">Удалить</a>
-                                </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                    Информация
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
+                 aria-labelledby="panelsStayOpen-headingOne">
+                <div class="accordion-body">
+                    <a role="button" class="btn btn-primary" href="">Редактировать</a>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-3">
+                                <img src="{{ url_for('static', filename='img/empty_profile_img.png') }}"
+                                     alt="Картинка не загрузилась" style="height: 200px; width: 200px"/>
+                            </div>
+                            <div class="col">
+                                <div><strong>Имя:</strong> {{ current_user.username }}</div>
+                                <div><strong>Почта:</strong> {{ current_user.email }}</div>
+                                <div><strong>Описание:</strong> Пусто</div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <h3 class="card-title">{{ post.title }}</h3>
-                            <p class="card-text">{{ post.content }}</p>
-                        </div>
-                        <div class="card-header">
-                            {{ post.date_posted }}
-                        </div>
                     </div>
-                {% endfor %}
+                </div>
             </div>
         </div>
-      </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"  aria-controls="panelsStayOpen-collapseTwo">
+                    Проекты
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                <div class="accordion-body">
+                    <a role="button" class="btn btn-primary mb-3" href="{{ url_for('project.create_project') }}">Создать проект</a>
+{#                    <table class="table">#}
+{#                      <thead>#}
+{#                        <tr>#}
+{#                          <th scope="col" class="text-start">Название</th>#}
+{#                          <th scope="col">Цена</th>#}
+{#                        </tr>#}
+{#                      </thead>#}
+{#                      <tbody>#}
+{#                        <tr>#}
+{#                          <td class="text-start">Телефон</td>#}
+{#                          <td>500$</td>#}
+{#                        </tr>#}
+{#                      </tbody>#}
+{#                    </table>#}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Название проекта</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set ind = 1 %}
+                            {% for project in projects %}
+                                <tr>
+                                    <th scope="row">{{ ind }}</th>
+                                    <th><a role="button" class="btn btn-link" href="{{ url_for('project.open_project', id=project.id) }}">{{ project.title }}</a></th>
+                                    <th class="w-25 ps-5">
+                                        <a role="button" class="btn btn-primary" href="{{ url_for('project.edit_project', id=project.id) }}">Редактировать</a>
+                                        <a role="button" class="btn btn-primary" href="">Удалить</a>
+                                    </th>
+                                </tr>
+                                {% set ind = ind + 1 %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                    Посты
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse"
+                 aria-labelledby="panelsStayOpen-headingThree">
+                <div class="accordion-body">
+                    <a role="button" class="btn btn-primary" href="{{ url_for('blog.create_blog_post') }}">Новая
+                        запись</a>
+                    {% for post in posts %}
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row" style="margin: 0 0">
+                                    <div class="col">
+                                        <img src="{{ url_for('static', filename='img/empty_profile_img.png') }}"
+                                             alt="Картинка не загрузилась" style="height: 40px; width: 40px"/>
+                                        {{ current_user.username }}
+                                    </div>
+                                    <div class="col-auto">
+                                        <a role="button" class="btn btn-primary"
+                                           href="{{ url_for('blog.edit_blog_post', post_id=post.id) }}">Редактировать</a>
+                                        <a role="button" class="btn btn-primary"
+                                           href="{{ url_for('blog.delete', post_id=post.id) }}">Удалить</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title">{{ post.title }}</h3>
+                                <p class="card-text">{{ post.content }}</p>
+                            </div>
+                            <div class="card-header">
+                                {{ post.date_posted }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

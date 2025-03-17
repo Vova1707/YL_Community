@@ -23,6 +23,7 @@ def create_blog_post():
     return render_template('blog/create.html')
 
 @blog_bp.route('/<int:post_id>')
+@login_required
 def view_blog_post(post_id):
     session = create_session()
     post = session.query(Poster).get(post_id)
@@ -50,13 +51,14 @@ def edit_blog_post(post_id):
             post.content = content
             session.commit()
             flash('Запись успешно обновлена!', 'success')
-            return redirect(url_for('profile.index', post_id=post.id))
+            return redirect(url_for('profile.index'))
         else:
             flash('Заголовок и содержимое обязательны.', 'danger')
 
     return render_template('blog/edit.html', post=post)
 
 @blog_bp.route('/<int:post_id>/delete')
+@login_required
 def delete(post_id):
     session = create_session()
     post = session.query(Poster).get(post_id)

@@ -12,8 +12,17 @@
     <!-- https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css -->
     <!-- https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.css -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href='http://fonts.googleapis.com/css?family=JetBrains Mono:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Tektur:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Comfortaa:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Jura:400,300,700' rel='stylesheet' type='text/css'>
+    <style>
+            #body {
+                font-family: 'JetBrains Mono', sans-serif; /* Шрифт по умолчанию */
+            }
+    </style>
 </head>
-<body>
+<body id="body"> <!-- style="font-family: font, sans-serif !important;" -->
     <header class="navbar sticky-top navbar-expand-lg" id="glass">
         <!-- fixed-top -->
         <a class="navbar-brand" href="{{ url_for('index') }}">YL Community</a>
@@ -47,6 +56,37 @@
                             const savedTheme = localStorage.getItem('theme') || 'light'; // Проверяем сохранённую тему в localStorage
                             update_theme(savedTheme); // Обновляем заголовок с текущей темой
                          });
+                    </script>
+                </li>
+                <li class="nav-item">
+                    <select id="fontSelect" class="form-select w-auto"> <!-- Tektur | Comfortaa | Jura | JetBrains Mono -->
+                        <option value="'JetBrains Mono', sans-serif">JetBrains Mono</option>
+                        <option value="'Tektur', sans-serif">Tektur</option>
+                        <option value="'Comfortaa', sans-serif">Comfortaa</option>
+                        <option value="'Jura', sans-serif">Jura</option>
+                    </select>
+
+                    <!-- style="padding: 6px 10px;" -->
+                    <!-- <div class="row mb-0 ml-0">
+                        <div class="col"></div>
+                        <div class="col mb-2"><label for="fontSelect" class="form-label">Шрифт:</label></div>
+                    </div> -->
+                    <script>
+                        const fontSelect = document.getElementById('fontSelect');
+                        const body = document.getElementById('body');
+                        // Проверяем, сохранён ли шрифт в localStorage
+                        const savedFont = localStorage.getItem('selectedFont');
+                        if (savedFont) {
+                            body.style.fontFamily = savedFont;
+                            fontSelect.value = savedFont; // Устанавливаем сохранённый выбор в списке
+                        }
+                        // Слушатель на изменение шрифта
+                        fontSelect.addEventListener('change', function() {
+                            const selectedFont = this.value;
+                            body.style.fontFamily = selectedFont;
+                            // Сохраняем выбор в localStorage
+                            localStorage.setItem('selectedFont', selectedFont);
+                        });
                     </script>
                 </li>
             </ul>

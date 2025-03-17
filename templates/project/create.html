@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Новая запись{% endblock %}
+
+{% block content %}
+    <h1>Создание проект</h1>
+    <form method="POST" action="" enctype="multipart/form-data" novalidate>
+        {{ form.hidden_tag() }}
+        <div> <!-- class="mb-3" -->
+            <label>{{ form.title.label }}</label>
+            {{ form.title(class="form-control") }}
+            {% for error in form.title.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="mb-3">
+            <div class="row mb-0">{{ form.description.label }}</div>
+            <div class="row"><small class="text-muted">{{ form.description_doptext }}</small></div>
+            {{ form.description(class="form-control") }}
+            {% for error in form.description.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="mb-3">
+            <div class="row mb-0">{{ form.file.label }}</div>
+            <div class="row mb-0"><small class="text-muted">{{ form.file_doptext }}</small></div>
+            <div class="row"><small class="text-muted">{{ form.file_extension_str }}</small></div>
+            {{ form.file(class="form-control") }}
+            {% for error in form.file.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">{{ form.submit.label.text }}</button>
+    </form>
+{% endblock %}

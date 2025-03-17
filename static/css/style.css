@@ -12,5 +12,5 @@ div.post_header {
 #glass {
     background: rgba(205, 214, 219, 0.3);
     backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
