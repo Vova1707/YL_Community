@@ -1,7 +1,4 @@
-import base64
-
-from sqlalchemy import Column, Integer, String, Text, Enum
-from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy import Column, Integer, String, Text, Enum, LargeBinary
 from sqlalchemy.orm import relationship
 
 from db_session import SqlAlchemyBase
@@ -18,7 +15,7 @@ class User(SqlAlchemyBase, UserMixin):
     about = Column(Text, nullable=True, default='about')
     age = Column(Integer, nullable=True, default=52)
     email = Column(String(120), unique=True, nullable=False, default='teach@mail.ru')
-    image_profile = Column(String, nullable=True, default=None)
+    image_profile = Column(LargeBinary, nullable=True, default=None)
     type = Column(Enum('teacher', 'student', 'admin', name='user_type'),
                  nullable=False, default='student')
     password_hash = Column(String(128), nullable=False)
