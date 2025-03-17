@@ -15,21 +15,82 @@ from forms.projects import Project_create_form
 
 project_bp = Blueprint('project', __name__, url_prefix='/project')
 
-def create_folder_tree(root_dir):
+# def recursive_create_folder_tree(path, flag_folder, file_tree):
+#     name, next_path = path.split("/")[0], "/".join(path.split("/")[1:])
+#     print(name, next_path, file_tree)
+#     if file_tree and name in list(map(lambda x: x["name"], file_tree)):
+#         return recursive_create_folder_tree(next_path, flag_folder, list(filter(lambda x: x["name"] == name, file_tree))[0]["children"])
+#     else:
+#         if flag_folder:
+#             file_tree.append({
+#                 'name': name,
+#                 'type': 'folder',
+#                 'children': []
+#             })
+#         else:
+#             file_tree.append({
+#                 'name': name,
+#                 'type': 'file'
+#             })
+#         return file_tree
+#
+# def create_folder_tree(infolist):
+#     file_tree = []
+#     for info in infolist:
+#         path = info.filename
+#         print("-" * 20)
+#         print("start:", path, file_tree)
+#         file_tree = recursive_create_folder_tree("/".join(path.split("/")[:-1]), True if path.split("/")[-1] == "" else True, file_tree)
+#         print("end:", path, file_tree)
+#         print("-" * 20)
+#     return file_tree
+
+
+# def create_folder_tree(root_dir):
+#     file_tree = []
+#     for entry in os.scandir(root_dir):
+#         if entry.is_dir():
+#             file_tree.append({
+#                 'name': entry.name,
+#                 'type': 'folder',
+#                 'children': create_folder_tree(entry.path)
+#             })
+#         else:
+#             file_tree.append({
+#                 'name': entry.name,
+#                 'type': 'file'
+#             })
+#     return file_tree
+
+
+def create_folder_tree(path, list_name):
     file_tree = []
-    for entry in os.scandir(root_dir):
-        if entry.is_dir():
-            file_tree.append({
-                'name': entry.name,
-                'type': 'folder',
-                'children': create_folder_tree(entry.path)
-            })
-        else:
-            file_tree.append({
-                'name': entry.name,
-                'type': 'file'
-            })
+    print("-"*100)
+    if path.split("/")[-1] == "":
+        content_dir = list(filter(lambda x: path == "/".join(x.split("/")[:-2]) + "/" and x.split("/")[-2] != "" and x.split("/")[-1] == "", list_name))
+        content_file = list(filter(lambda x: path == "/".join(x.split("/")[:-1]) + "/" and x.split("/")[-1] != "", list_name))
+    else:
+        content_dir = []
+        content_file = [path]
+    print(path, content_dir, content_file)
+    print(list_name)
+    print()
+    for path_content in content_dir:
+        file_tree.append({
+            'name': path_content.split("/")[-2],
+            'type': 'folder',
+            'children': create_folder_tree(path_content, list_name[1:])
+        })
+    # print("FILE:")
+    for path_content in content_file:
+        print(path_content)
+        file_tree.append({
+            'name': path_content.split("/")[-1],
+            'type': 'file'
+        })
     return file_tree
+
+
 
 @project_bp.route('/<id>')
 @login_required
@@ -45,20 +106,23 @@ def open_project(id):
     else:
         file_data = "*Ссылка на скачивание архив*"
         with ZipFile(BytesIO(project.file)) as zip_file:
-            # file_tree = [
-            #     ("files", ['1', '2', '3'], ['1.txt', 'Icon\r']),
-            #     ("files/1", [], ['Icon\r']),
-            #     ("files/2", [], ['Icon\r']),
-            #     ("files/3", ["files"], ['Icon\r', 'Описание.txt']),
-            #     ("files/3/files", ['csvs'], []),
-            #     ("files/3/files/csvs", [], ['Icon\r', 'данные.csv'])
-            #
-            # ]
-            # file_tree = dict(list(map(lambda x: (x[0], {'dirs': x[1], 'files': x[2]}), file_tree)))
-            # file_tree = {"files": [{'1': []}, {'2': []}, {'3': [{'csvs': ['данные.csv', {'files': []},  'Описание.txt']}]}]}
-            file_tree = [{'name': 'files', 'type': 'folder', 'children': [{'name': '1', 'type': 'folder', 'children': []}, {'name': '2', 'type': 'folder', 'children': []}, {'name': '3', 'type': 'folder', 'children': [{'name': 'csvs', 'type': 'folder', 'children': [{'name': 'данные.csv', 'type': 'file'}]}, {'name': 'files', 'type': 'folder', 'children': []}, {'name': 'Описание.txt', 'type': 'file'}]}]}]
-            # print(zip_file.infolist()[0].filename)
-            # file_tree = create_folder_tree(zip_file.infolist()[0].filename)
+            # file_tree = [{'name': 'files', 'type': 'folder', 'children': [{'name': '1', 'type': 'folder', 'children': []}, {'name': '2', 'type': 'folder', 'children': []}, {'name': '3', 'type': 'folder', 'children': [{'name': 'csvs', 'type': 'folder', 'children': [{'name': 'данные.csv', 'type': 'file'}]}, {'name': 'files', 'type': 'folder', 'children': []}, {'name': 'Описание.txt', 'type': 'file'}]}]}]
+            # file_tree = create_folder_tree("DEMO-13/", zip_file.namelist())
+            file_tree = []
+            for name in zip_file.namelist():
+                if name.split("/")[-1] == "" and len(name.split("/")) == 2:
+                    file_tree.append({
+                        'name': name.split("/")[-2],
+                        'type': 'folder',
+                        "children": create_folder_tree(name, zip_file.namelist())
+                    })
+                elif name.split("/")[-1] != "" and len(name.split("/")) == 1:
+                    file_tree.append({
+                        'name': name.split("/")[-1],
+                        'type': 'file'
+                    })
+
+
 
             # infolists = zip_file.infolist()
             # folder_name = infolists[0].filename.split("/")[-1]
