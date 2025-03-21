@@ -78,4 +78,4 @@ def index():
     session = create_session()
     posts = session.query(Poster).filter(Poster.user_id == current_user.id)
     projects = session.query(Project).filter(Project.user_id == current_user.id)
-    return render_template('profile/profile.html', posts=posts, projects=projects)
+    return render_template('profile/profile.html', posts=posts, projects=projects, len_projects=list(projects).__len__())

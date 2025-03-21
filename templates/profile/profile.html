@@ -18,7 +18,7 @@
                     <a role="button" class="btn btn-primary" href="">Редактировать</a>
                     <div class="container">
                         <div class="row">
-                            <div class="col-3">
+                            <div class="col">
                                 <img src="{{ url_for('static', filename='img/empty_profile_img.png') }}"
                                      alt="Картинка не загрузилась" style="height: 200px; width: 200px"/>
                             </div>
@@ -41,43 +41,31 @@
             <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
                 <div class="accordion-body">
                     <a role="button" class="btn btn-primary mb-3" href="{{ url_for('project.create_project') }}">Создать проект</a>
-{#                    <table class="table">#}
-{#                      <thead>#}
-{#                        <tr>#}
-{#                          <th scope="col" class="text-start">Название</th>#}
-{#                          <th scope="col">Цена</th>#}
-{#                        </tr>#}
-{#                      </thead>#}
-{#                      <tbody>#}
-{#                        <tr>#}
-{#                          <td class="text-start">Телефон</td>#}
-{#                          <td>500$</td>#}
-{#                        </tr>#}
-{#                      </tbody>#}
-{#                    </table>#}
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Название проекта</th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% set ind = 1 %}
-                            {% for project in projects %}
+                    {% if len_projects == 0 %}
+                        <p>Создайте свой первый проект</p>
+                    {% else %}
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <th scope="row">{{ ind }}</th>
-                                    <th><a role="button" class="btn btn-link" href="{{ url_for('project.open_project', id=project.id) }}">{{ project.title }}</a></th>
-                                    <th class="w-25 ps-5">
-                                        <a role="button" class="btn btn-primary" href="{{ url_for('project.edit_project', id=project.id) }}">Редактировать</a>
-                                        <a role="button" class="btn btn-primary" href="">Удалить</a>
-                                    </th>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Название проекта</th>
+                                    <th scope="col"></th>
                                 </tr>
-                                {% set ind = ind + 1 %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {% for project in projects %}
+                                    <tr>
+                                        <th scope="row">{{ loop.index }}</th>
+                                        <td><a role="button" class="btn btn-link" href="{{ url_for('project.open_project', id=project.id) }}">{{ project.title }}</a></td>
+                                        <td style="text-align: right;">
+                                            <a role="button" class="btn btn-primary" href="{{ url_for('project.edit_project', id=project.id) }}">Редактировать</a>
+                                            <a role="button" class="btn btn-secondary" href="{{ url_for('project.delete_project', id=project.id) }}">Удалить</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -87,8 +75,7 @@
                     Посты
                 </button>
             </h2>
-            <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse"
-                 aria-labelledby="panelsStayOpen-headingThree">
+            <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
                 <div class="accordion-body">
                     <a role="button" class="btn btn-primary" href="{{ url_for('blog.create_blog_post') }}">Новая
                         запись</a>
@@ -104,8 +91,7 @@
                                     <div class="col-auto">
                                         <a role="button" class="btn btn-primary"
                                            href="{{ url_for('blog.edit_blog_post', post_id=post.id) }}">Редактировать</a>
-                                        <a role="button" class="btn btn-primary"
-                                           href="{{ url_for('blog.delete', post_id=post.id) }}">Удалить</a>
+                                        <a role="button" class="btn btn-secondary" href="{{ url_for('blog.delete', post_id=post.id) }}">Удалить</a>
                                     </div>
                                 </div>
                             </div>

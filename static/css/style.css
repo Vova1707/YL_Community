@@ -1,3 +1,13 @@
+:root {
+    --main-color: #c5c100;
+    --dopmain-color: #fffab2; /* Цвет текста */
+    --second-color: #b6432b;
+    --dopsecond-color: #ffb0a1;
+    --dark-color: #b2b2b2;
+    --dopdark-color: #818181;
+}
+
+
 div {
     margin: 10px 0;
     /*border: 1px solid black;*/
@@ -13,4 +23,109 @@ div.post_header {
     background: rgba(205, 214, 219, 0.3);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+}
+#glass_gradient {
+    background: linear-gradient(150deg, var(--second-color), rgba(205, 214, 219, 0.3) 10%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+.accordion-item {
+    background: rgba(205, 214, 219, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 10px;
+    margin: 0 0;
+}
+form {
+    padding: 10px 15px;
+    background: rgba(205, 214, 219, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 10px;
+}
+
+.move-on-scroll {
+    position: relative;
+    top: 100px;
+    margin: 0 0;
+    /* left: 50%; */
+    /* transform: translateX(-50%); */
+    transition: transform 0.1s ease-out;
+}
+img.wallpaper_img {
+    position: absolute;
+    z-index: -1;
+}
+
+#body {
+    font-family: 'JetBrains Mono', sans-serif; /* Шрифт по умолчанию */
+}
+
+.btn-primary {
+    background-color: var(--main-color) !important;
+    color: var(--dopmain-color) !important;
+    border-color: rgba(0, 0, 0, 0) !important;
+}
+.btn-primary:hover {
+    background-color: var(--dopmain-color) !important;
+    color: var(--main-color) !important;
+    border-color: rgba(0, 0, 0, 0) !important;
+}
+.btn-primary#dop {
+    background-color: rgba(0, 0, 0, 0) !important;
+    color: var(--dark-color) !important;
+    border-color: rgba(0, 0, 0, 0) !important;
+}
+.btn-primary#dop:hover {
+    background-color: rgba(0, 0, 0, 0) !important;
+    color: var(--dopsecond-color) !important;
+    border-color: rgba(0, 0, 0, 0) !important;
+}
+.btn-secondary {
+    background-color: var(--second-color) !important;
+    color: var(--dopsecond-color) !important;
+    border-color: rgba(0, 0, 0, 0) !important;
+}
+.btn-secondary:hover {
+    background-color: var(--dopsecond-color) !important;
+    color:  var(--second-color)  !important;
+    border-color: rgba(0, 0, 0, 0) !important;
+}
+.btn-success {
+    background-color: var(--main-color) !important;
+    color: var(--dopmain-color) !important;
+    border-color: rgba(0, 0, 0, 0) !important;
+}
+.btn-danger {
+    background-color: var(--second-color) !important;
+    color: var(--dopsecond-color) !important;
+    border-color: rgba(0, 0, 0, 0) !important;
+}
+.btn-link {
+    color: var(--dopdark-color) !important;
+}
+.btn-link:hover {
+    color: var(--dopsecond-color) !important;
+}
+.nav-link:hover {
+    color: var(--dopsecond-color) !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background: var(--main-color) !important;
+    color: var(--dopmain-color) !important;
+}
+.accordion-button::after {
+    color: var(--main-color) !important;
+    background: inherit;
+    content: "^"; transform: rotate(0deg); font-size: 30px;
+}
+.accordion-button:not(.collapsed)::after {
+    color: var(--dopmain-color) !important;
+    background: inherit;
+    content: "^"; transform: rotate(180deg);
+}
+.accordion-button:focus {
+    box-shadow: none;
+    outline: none;
 }

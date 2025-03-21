@@ -13,7 +13,8 @@ class Project(SqlAlchemyBase):
     description = Column(Text, nullable=True, default='description')
     # category = Column(Enum('web', 'mobile', 'data_science', name='project_category'), nullable=False)
     category = Column(Enum('web', 'mobile', 'data_science', 'no_category', name='project_category'), default='no_category', nullable=True)
-    file = Column(LargeBinary, nullable=True, default=None) # полюшко для хравения rar
+    file = Column(LargeBinary, nullable=True, default=None)
+    file_tree = Column(LargeBinary, nullable=True, default=None)
 
     # Внешние ключи
     user = relationship("User", back_populates="projects")

@@ -7,7 +7,7 @@
     <p>Социальная сеть для учеников Яндекс Лицея и всех, кто связан с Яндекс Образованием.</p>
 
     <div class="accordion" id="accordionPanelsStayOpenExample">
-      <div class="accordion-item">
+      <div class="accordion-item" id="glass"> <!-- ms-5 -->
         <h2 class="accordion-header" id="panelsStayOpen-headingOne">
           <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
             Новости
@@ -15,7 +15,7 @@
         </h2>
         <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
           <div class="accordion-body">
-              <!-- После настройки бд Вовой, создать бл новостей и загружать их отсюда -->
+              <!-- После настройки бд Вовой, создать бд новостей и загружать их отсюда -->
               {% for new_data in news_data %}
                   <div class="card">
                     <div class="card-header">
@@ -41,7 +41,7 @@
           </div>
         </div>
       </div>
-      <div class="accordion-item">
+      <div class="accordion-item"  id="glass">
         <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
             Мероприятия и конкурсы
