@@ -8,6 +8,10 @@ from settings import settings
 from db_session import global_init, create_session
 from models.users import User
 
+import base64
+import os
+import uuid
+
 import random
 
 app = Flask(__name__)
@@ -78,5 +82,6 @@ def change_theme():
     return ""
 
 if __name__ == '__main__':
+    app.jinja_env.globals['base64'] = base64
     global_init(app.config['DATABASE_URI'])
     app.run(host=app.config['HOST'], port=app.config['PORT'], debug=app.config['DEBUG'])

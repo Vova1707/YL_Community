@@ -15,13 +15,15 @@
             <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
                  aria-labelledby="panelsStayOpen-headingOne">
                 <div class="accordion-body">
-                    <a role="button" class="btn btn-primary" href="">Редактировать</a>
+                    <a role="button" class="btn btn-primary" href="{{ url_for('profile.edit_profile') }}">Редактировать</a>
                     <div class="container">
                         <div class="row">
-                            <div class="col">
-                                <img src="{{ url_for('static', filename='img/empty_profile_img.png') }}"
+                            {% if user.image_profile %}
+                            <img src="data:image/jpeg;base64,{{ base64.b64encode(current_user.image_profile).decode('utf-8') }}" alt="Фото профиля" style="height: 200px; width: 200px"/>
+                            {% else %}
+                            <img src="{{ url_for('static', filename='img/empty_profile_img.png') }}"
                                      alt="Картинка не загрузилась" style="height: 200px; width: 200px"/>
-                            </div>
+                                {% endif %}
                             <div class="col">
                                 <div><strong>Имя:</strong> {{ current_user.username }}</div>
                                 <div><strong>Почта:</strong> {{ current_user.email }}</div>
