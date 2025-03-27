@@ -68,3 +68,12 @@ def delete(post_id):
     session.delete(post)
     session.commit()
     return redirect(url_for('profile.index'))
+
+
+@blog_bp.route('/all')
+@login_required
+def all_blogs():
+    session = create_session()
+    posts = session.query(Poster).all()
+
+    return render_template('blog/all.html', posts=posts)

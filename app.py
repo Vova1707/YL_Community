@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, session
 from flask_login import LoginManager, current_user
 from routes.profile_routes import profile_bp
 from routes.blog_routes import blog_bp
@@ -7,6 +7,7 @@ from routes.rating_score import rating_bp
 from settings import settings
 from db_session import global_init, create_session
 from models.users import User
+from models.blog import Poster
 
 import base64
 import os
@@ -53,13 +54,10 @@ def index():
         with open(f"static/txt/{name_file}.txt", "r", encoding="utf-8") as f:
             new_data = list(map(lambda x: x.split("\n"), f.read().split("\n\n")))
         new_header, new_date = new_data[0][0], new_data[-1][0]
-        new_data = new_data[1:-1]
-        # print(new_header)
-        # print(new_data)
-        # print(new_date)
         news_data.append([new_header, new_data, new_date])
-    # Дальше будет состовлятся список новостей из отдельной бд
-    return render_template('index.html', news_data=news_data)
+    session = create_session()
+    posts = session.query(Poster).all()
+    return render_template('index.html', news_data=news_data, posts=posts)
 
 @app.context_processor
 def utility_change_theme():
@@ -80,6 +78,7 @@ def change_theme():
     print(request.url)
     # return redirect(url_for('index'))
     return ""
+
 
 if __name__ == '__main__':
     app.jinja_env.globals['base64'] = base64

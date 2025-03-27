@@ -71,43 +71,28 @@
                 </div>
             </div>
         </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
-                    Посты
-                </button>
-            </h2>
-            <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
-                <div class="accordion-body">
-                    <a role="button" class="btn btn-primary" href="{{ url_for('blog.create_blog_post') }}">Новая
-                        запись</a>
-                    {% for post in posts %}
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="row" style="margin: 0 0">
-                                    <div class="col">
-                                        <img src="{{ url_for('static', filename='img/empty_profile_img.png') }}"
-                                             alt="Картинка не загрузилась" style="height: 40px; width: 40px"/>
-                                        {{ current_user.username }}
-                                    </div>
-                                    <div class="col-auto">
-                                        <a role="button" class="btn btn-primary"
-                                           href="{{ url_for('blog.edit_blog_post', post_id=post.id) }}">Редактировать</a>
-                                        <a role="button" class="btn btn-secondary" href="{{ url_for('blog.delete', post_id=post.id) }}">Удалить</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <h3 class="card-title">{{ post.title }}</h3>
-                                <p class="card-text">{{ post.content }}</p>
-                            </div>
-                            <div class="card-header">
-                                {{ post.date_posted }}
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
+<a role="button" class="btn btn-primary" href="{{ url_for('blog.create_blog_post') }}">Новая запись</a>
+        {% for post in posts %}
+<div class="card mb-3">  <!-- Добавляем mb-3 для отступа между карточками -->
+    <div class="card-body">
+        <div class="d-flex align-items-center mb-2">  <!-- d-flex для выравнивания элементов в строку -->
+            <img src=""
+                 alt="Аватарка" style="height: 40px; width: 40px; border-radius: 50%; margin-right: 10px;">  <!-- border-radius для круглой аватарки -->
+            <div>
+                <h6 class="mb-0">{{ post.user.username }}</h6>  <!-- Отображаем имя автора поста -->
+                <small class="text-muted">{{ post.date_posted }}</small>  <!-- Добавляем дату публикации под именем -->
             </div>
         </div>
+        <h5 class="card-title">{{ post.title }}</h5>
+        <p class="card-text">{{ post.content }}</p>
+        <div class="d-flex justify-content-end">  <!-- d-flex для выравнивания кнопок вправо -->
+            <a role="button" class="btn btn-primary btn-sm mr-2"
+               href="{{ url_for('blog.edit_blog_post', post_id=post.id) }}">Редактировать</a>
+            <a role="button" class="btn btn-danger btn-sm"
+               href="{{ url_for('blog.delete', post_id=post.id) }}">Удалить</a>
+        </div>
+    </div>
+</div>
+{% endfor %}
     </div>
 {% endblock %}
