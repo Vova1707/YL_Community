@@ -16,37 +16,6 @@ from forms.projects import Project_create_form
 
 project_bp = Blueprint('project', __name__, url_prefix='/project')
 
-# def recursive_create_folder_tree(path, flag_folder, file_tree):
-#     name, next_path = path.split("/")[0], "/".join(path.split("/")[1:])
-#     print(name, next_path, file_tree)
-#     if file_tree and name in list(map(lambda x: x["name"], file_tree)):
-#         return recursive_create_folder_tree(next_path, flag_folder, list(filter(lambda x: x["name"] == name, file_tree))[0]["children"])
-#     else:
-#         if flag_folder:
-#             file_tree.append({
-#                 'name': name,
-#                 'type': 'folder',
-#                 'children': []
-#             })
-#         else:
-#             file_tree.append({
-#                 'name': name,
-#                 'type': 'file'
-#             })
-#         return file_tree
-#
-# def create_folder_tree(infolist):
-#     file_tree = []
-#     for info in infolist:
-#         path = info.filename
-#         print("-" * 20)
-#         print("start:", path, file_tree)
-#         file_tree = recursive_create_folder_tree("/".join(path.split("/")[:-1]), True if path.split("/")[-1] == "" else True, file_tree)
-#         print("end:", path, file_tree)
-#         print("-" * 20)
-#     return file_tree
-
-
 # def create_folder_tree(root_dir):
 #     file_tree = []
 #     for entry in os.scandir(root_dir):
@@ -86,7 +55,8 @@ def create_folder_tree_reverse(path, list_name):
         print(path_content)
         file_tree.append({
             'name': path_content.split("/")[-1],
-            'type': 'file'
+            'type': 'file',
+            'path': path_content.replace("/", "\\")
         })
     return file_tree
 
@@ -105,7 +75,8 @@ def create_folder_tree(byte_code):
             elif name.split("/")[-1] != "" and len(name.split("/")) == 1:
                 file_tree.append({
                     'name': name.split("/")[-1],
-                    'type': 'file'
+                    'type': 'file',
+                    'path': name.replace("/", "\\")
                 })
     return file_tree
 
@@ -125,7 +96,7 @@ def open_project(id):
     else:
         file_data = "*Ссылка на скачивание архив*"
 
-
+    print(file_tree)
     flash(f'Вы вошли в проект {project.title}', 'info')
     return render_template('project/view.html', name=project.title, id=id, description=project.description, file_data=file_data, file_tree=file_tree)
 
@@ -147,7 +118,6 @@ def create_project():
         user = session.query(User).get(current_user.id)
         project = Project(title=title, description=description, user_id=current_user.id, file=file.read(), file_tree=file_tree)
         project.author = user
-        print(project.file_tree)
         session.add(project)
         session.commit()
 
@@ -199,3 +169,21 @@ def delete_project(id):
     session.delete(project)
     session.commit()
     return redirect(url_for('profile.index'))
+
+@project_bp.route('<int:id_project>/file/<string:path>')
+@login_required
+def open_file(id_project, path):
+    session = create_session()
+    project = session.query(Project).get(id_project)
+    if not project:
+        flash('Проект не найден.', 'danger')
+        return redirect(url_for('profile.index'))
+
+    path = path.replace('\\', '/')
+    with ZipFile(BytesIO(project.file)) as zip_file:
+        with zip_file.open(path, 'r') as file:
+            file_data = file.read().decode('utf-8')
+            # file_data = list(map(lambda s: s.decode('utf-8'), file.readlines()))
+    return render_template('project/file_view.html',
+                           name_project=project.title, file_tree=pickle.loads(project.file_tree), id=id_project,
+                           path=path, file_data=file_data)

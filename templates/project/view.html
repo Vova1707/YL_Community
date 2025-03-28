@@ -5,7 +5,7 @@
 {% block content %}
     <h1>{{ name }}</h1>
     <p>id = {{ id }}</p>
-    <div>
+    <div style="margin: 10px 0; padding: 0 0;">
         <a role="button" class="btn btn-primary" href="{{ url_for("project.edit_project", id=id) }}">Изменить проект</a>
         <a role="button" class="btn btn-secondary" href="{{ url_for('project.delete_project', id=id) }}">Удалить</a>
     </div>
@@ -34,7 +34,9 @@
                                         </ul>
                                     </div>
                                 {% else %}
-                                    📄 {{ node.name }}
+                                    <a class="btn btn-primary p-0 m-0" id="dop" href="{{ url_for("project.open_file", id_project=id, path=node.path) }}">
+                                        📄 {{ node.name }}
+                                    </a>
                                 {% endif %}
                             </li>
                         {% endfor %}
