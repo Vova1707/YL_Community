@@ -1,9 +1,10 @@
-from flask import Flask, render_template, redirect, url_for, request, session
+from flask import Flask, render_template, redirect, url_for, request, abort, flash, session
 from flask_login import LoginManager, current_user
 from routes.profile_routes import profile_bp
 from routes.blog_routes import blog_bp
 from routes.project_routes import project_bp
-from routes.rating_score import rating_bp
+from routes.rating_routes import rating_bp
+
 from settings import settings
 from db_session import global_init, create_session
 from models.users import User
@@ -59,25 +60,60 @@ def index():
     posts = session.query(Poster).all()
     return render_template('index.html', news_data=news_data, posts=posts)
 
-@app.context_processor
-def utility_change_theme():
-    return dict(change_theme=change_theme)
 
-def change_theme():
-    global theme
-    if theme == "light":
-        theme = "dark"
+data_errors = {
+    401: {
+        "text": "Неверный логин или пароль",
+        "tags": ["абоба"]
+    },
+    403: {
+        "text": "Доступ запрещён (Виктор зарещает)",
+        "tags": ["наш слоняра"]
+    },
+    404: {
+        "text": "Ой, ой, ой... Страница не найдена",
+        "tags": ["договорничок"]
+    },
+    405: {
+        "text": "Нет такого метода запроса (Виктор не даст вам данные!)",
+        "tags": ["авава"]
+    },
+    418: {
+        "text": "Хаха, я чайник (Виктор)",
+        "tags": ["авава", "абоба", "договорничок", "наш слоняра"]
+    },
+    500: {
+        "text": "У нас сбой (Виктор вас не наругает, вы не виноваты)",
+        "tags": ["наш слоняра"]
+    },
+    502: {
+        "text": "Проблему у нашего сервера",
+        "tags": ["абоба"]
+    },
+    503: {
+        "text": "Сервис временно недоступен. Виктор пока чинет сайт, подождите",
+        "tags": ["договорничок"]
+    },
+    504: {
+        "text": "Запрос обрабатывается слишком долго. Таймаут, Виктор отключил соединение",
+        "tags": ["авава"]
+    },
+}
+def error_handlers(app, errors):
+    for code, info in errors.items():
+        @app.errorhandler(code)
+        def error_handle(_, code=code, info=info):
+            return render_template('error.html', code=code, text=info["text"], tags=info["tags"]), code
+error_handlers(app, data_errors)
+
+
+@app.route('/error/<int:code>')
+def error(code):
+    if code in data_errors.keys():
+        abort(code)
     else:
-        theme = "light"
-    print(theme)
-    # print(request.url)
-    # print(request.path)
-    # print(request)
-    # return redirect(request.args.get("current_page"))
-    # print(current_page)
-    print(request.url)
-    # return redirect(url_for('index'))
-    return ""
+        flash(f'Ошибка с номером {code} не обрабатывается.', 'danger')
+        return redirect('/')
 
 
 if __name__ == '__main__':

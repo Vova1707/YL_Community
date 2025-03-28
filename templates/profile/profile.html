@@ -16,7 +16,7 @@
                  aria-labelledby="panelsStayOpen-headingOne">
                 <div class="accordion-body">
                     <a role="button" class="btn btn-primary" href="{{ url_for('profile.edit_profile') }}">Редактировать</a>
-                    <div class="container">
+                    <div class="container" style="margin: 10px 0; padding: 0 0;">
                         <div class="row">
                             {% if user.image_profile %}
                             <img src="data:image/jpeg;base64,{{ base64.b64encode(current_user.image_profile).decode('utf-8') }}" alt="Фото профиля" style="height: 200px; width: 200px"/>

@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}Файл path{% endblock %}
+
+{% block content %}
+    <h1>{{ name_project }}</h1>
+
+    <div class="row m-1"> <!-- style="margin: 0 0; padding: 0 0;" -->
+        <div class="col m-0 p-0"><p class="text-primary">{{ path }}</p></div>
+        <div class="col-auto m-0 p-0">
+            <a role="button" class="btn btn-primary" href="">Изменить файл</a>
+            <a role="button" class="btn btn-secondary" href="">Удалить файл</a>
+        </div> <!-- yltheme || monokai | dracula | material | tomorrow-night-bright || default | eclipse | idea -->
+    </div>
+
+    <div class="container container-resizer"> <!-- style="margin: 0 0; padding: 0 0;" -->
+        <div class="box box1">
+            <div class="accordion-body m-1" data-theme="dark" style="position: relative">
+              {% if file_tree %}
+                  <ul class="div-code-editor list-group">
+                    {% macro render_tree(tree, parent_id='root') %}
+                        {% for node in tree %}
+                            <li class="list-group-item" id="code-editor" data-theme="dark" style="border: none; box-shadow: none;">
+                                {% if node.type == 'folder' %}
+                                    <button class="btn btn-primary p-0 m-0" id="dop" data-bs-toggle="collapse" data-bs-target="#collapse-{{ parent_id }}-{{ loop.index }}"> <!-- Кнопка для раскрытия вложенной папки -->
+                                        📁 {{ node.name }}
+                                    </button>
+                                    <div id="collapse-{{ parent_id }}-{{ loop.index }}" class="collapse p-0 m-0"> <!-- Контейнер для вложенных элементов -->
+                                        <ul class="list-group p-0 m-0">
+                                            {{ render_tree(node.children, parent_id ~ '-' ~ loop.index) }}
+                                        </ul>
+                                    </div>
+                                {% else %}
+                                    <a class="btn btn-primary p-0 m-0" id="dop" href="{{ url_for("project.open_file", id_project=id, path=node.path) }}">
+                                        📄 {{ node.name }}
+                                    </a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    {% endmacro %}
+                    {{ render_tree(file_tree) }}
+                  </ul>
+              {% endif %}
+            </div>
+        </div>
+        <div class="resizer"></div>
+        <div class="box box2">
+            <div class="div-code-editor m-1" data-theme="dark"><textarea class="CodeMirror" id="editor">{{ file_data }}</textarea></div>
+            <script>
+                var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+                    mode: "python",
+                    theme: "yltheme",  // yltheme || monokai | dracula | material | tomorrow-night-bright || default | eclipse | idea
+                    lineNumbers: true,
+                    //indentUnit: 4,
+                    //tabSize: 4,
+                    //matchBrackets: true
+                });
+                /* let previousLines = 1    ;
+                document.getElementById("editor").addEventListener("input", function () {
+                    let currentLines = editor.value.split("\n").length;
+                    if (currentLines > previousLines) {
+                        //this.style.height = this.value.split("\n").length * 21 + "px";
+                        console.log("Пользователь добавил строку");
+                    } else if (currentLines < previousLines) {
+                        editor.style.height = editor.value.split("\n").length * 21 + "px"; // this.value.split("\n").length * 21 + "px";
+                        console.log("Пользователь удалил строку");
+                    }
+                    previousLines = currentLines;
+                    editor.style.height = editor.scrollHeight + "px";
+                }); */
+            </script>
+            <select id="font-editor-select" class="form-select m-1 p-1 w-auto">
+                <option value="yltheme">встроенная тема</option>
+                <option value="monokai">monokai</option>
+                <option value="dracula">dracula</option>
+                <option value="material">material</option>
+                <option value="tomorrow-night-bright">tomorrow-night-bright</option>
+                <option value="default">default</option>
+                <option value="eclipse">eclipse</option>
+                <option value="idea">idea</option>
+            </select>
+            <script>
+                const font_editor = document.getElementById('font-editor-select');
+
+                const saved_font_editor = localStorage.getItem('FontEditorSelected');
+                if (saved_font_editor) {
+                    console.log(saved_font_editor);
+                    editor.setOption("theme", saved_font_editor);
+                    font_editor.value = saved_font_editor;
+                }
+
+                font_editor.addEventListener('change', function() {
+                    const FontEditorSelected = this.value;
+                    editor.setOption("theme", FontEditorSelected);
+                    // CodeMirror(document.getElementById("editor")).setOption("theme", font_editor_selected);
+
+                    localStorage.setItem('FontEditorSelected', FontEditorSelected);
+                });
+            </script>
+        </div>
+    </div>
+    <script>
+      const resizer = document.querySelector('.resizer');
+      const box1 = document.querySelector('.box1');
+      const box2 = document.querySelector('.box2');
+      let isResizing = false;
+
+      resizer.addEventListener('mousedown', (event) => {
+        isResizing = true;
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', () => isResizing = false, { once: true });
+      });
+
+      function handleMouseMove(event) {
+        if (!isResizing) return;
+
+        const containerWidth = resizer.parentElement.offsetWidth;
+        let newBox1Width = event.clientX - resizer.parentElement.offsetLeft;
+
+        // Ограничения по минимальной ширине
+        const minWidth = 50;
+        const maxWidth = containerWidth - minWidth;
+
+        if (newBox1Width < minWidth) newBox1Width = minWidth;
+        if (newBox1Width > maxWidth) newBox1Width = maxWidth;
+
+        box1.style.width = newBox1Width + 'px';
+        box2.style.width = (containerWidth - newBox1Width - resizer.offsetWidth) + 'px';
+      }
+    </script>
+{% endblock %}
