@@ -71,28 +71,36 @@
                 </div>
             </div>
         </div>
-<a role="button" class="btn btn-primary" href="{{ url_for('blog.create_blog_post') }}">Новая запись</a>
-        {% for post in posts %}
-<div class="card mb-3">  <!-- Добавляем mb-3 для отступа между карточками -->
-    <div class="card-body">
-        <div class="d-flex align-items-center mb-2">  <!-- d-flex для выравнивания элементов в строку -->
-            <img src=""
-                 alt="Аватарка" style="height: 40px; width: 40px; border-radius: 50%; margin-right: 10px;">  <!-- border-radius для круглой аватарки -->
-            <div>
-                <h6 class="mb-0">{{ post.user.username }}</h6>  <!-- Отображаем имя автора поста -->
-                <small class="text-muted">{{ post.date_posted }}</small>  <!-- Добавляем дату публикации под именем -->
+        <div class="container">
+    </div>
+    <a role="button" class="btn btn-primary" href="{{ url_for('blog.create_blog_post') }}">Новая запись</a>
+    {% for post in posts %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex align-items-center mb-2">
+                <div>
+                    {% if post.id in images and images[post.id] %}
+                        <div class="d-flex">
+                            {% for img in images[post.id] %}
+                                <img src="data:image/jpeg;base64,{{ base64.b64encode(img).decode('utf-8') }}" style="height: 100px; width: 100px" alt="Аватарка">
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <h6 class="mb-0">{{ post.user.username }}</h6>
+                    <small class="text-muted">{{ post.date_posted }}</small>
+                </div>
             </div>
-        </div>
-        <h5 class="card-title">{{ post.title }}</h5>
-        <p class="card-text">{{ post.content }}</p>
-        <div class="d-flex justify-content-end">  <!-- d-flex для выравнивания кнопок вправо -->
+            <h5 class="card-title">{{ post.title }}</h5>
+            <p class="card-text">{{ post.content }}</p>
             <a role="button" class="btn btn-primary btn-sm mr-2"
-               href="{{ url_for('blog.edit_blog_post', post_id=post.id) }}">Редактировать</a>
-            <a role="button" class="btn btn-danger btn-sm"
-               href="{{ url_for('blog.delete', post_id=post.id) }}">Удалить</a>
+           href="{{ url_for('blog.edit_blog_post', post_id=post.id) }}">Редактировать</a>
+        <a role="button" class="btn btn-danger btn-sm"
+           href="{{ url_for('blog.delete', post_id=post.id) }}">Удалить</a>
         </div>
     </div>
+    {% endfor %}
 </div>
-{% endfor %}
     </div>
 {% endblock %}

@@ -11,6 +11,7 @@ from models.projects import Project
 from models.users import User
 from werkzeug.security import check_password_hash, generate_password_hash
 from forms.profile import Profile_edit_form
+from models.blog import ImagePoster
 
 
 profile_bp = Blueprint('profile', __name__, url_prefix='/profile')
@@ -84,8 +85,12 @@ def index():
     session = create_session()
     user = session.query(User).filter(User.id == current_user.id).first()
     posts = session.query(Poster).filter(Poster.user_id == current_user.id)
+    images = {}
+    for post in posts:
+        images[post.id] = [image.image for image in session.query(ImagePoster).filter(ImagePoster.post_id == post.id)]
+    print(session.query(ImagePoster).all())
     projects = session.query(Project).filter(Project.user_id == current_user.id)
-    return render_template('profile/profile.html', posts=posts, projects=projects, user=user)
+    return render_template('profile/profile.html', posts=posts, projects=projects, user=user, images=images)
 
 
 @profile_bp.route('/edit_profile')
@@ -112,7 +117,6 @@ def edit_profile():
             user.email = email
             if image_profile:
                 if image_profile.filename != '':
-                    import base64
                     image_data = image_profile.read()
                     user.image_profile = image_data
             session.commit()

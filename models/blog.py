@@ -16,7 +16,6 @@ class Poster(SqlAlchemyBase):
     date_posted = Column(DateTime, default=datetime.now())
     likes = Column(Integer, default=0)
     dislikes = Column(Integer, default=0)
-
     # Внешние ключи
     user = relationship("User", back_populates="posters")
     comments = relationship("CommentPoster", back_populates="post")

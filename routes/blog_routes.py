@@ -1,26 +1,38 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
 from db_session import create_session
-from models.blog import Poster
+from models.blog import Poster, ImagePoster
 from models.users import User
+from forms.blog import BlogForms
 
 blog_bp = Blueprint('blog', __name__, url_prefix='/blog')
 
 @blog_bp.route('/create', methods=['GET', 'POST'])
 @login_required
 def create_blog_post():
+    form = BlogForms()
     if request.method == 'POST':
-        title = request.form.get('title')
-        description = request.form.get('content')
+        title = form.title.data
+        description = form.description.data
         session = create_session()
-        user = session.query(User).get(current_user.id)
         blog_post = Poster(title=title, description=description, user_id=current_user.id)
-        blog_post.author = user
         session.add(blog_post)
         session.commit()
+        images = form.images.data
+        session = create_session()
+        for image in images:
+            blog_post = max(session.query(Poster).all(), key=lambda s: s.id)
+            if image:
+                if image.filename != '':
+                    image_data = image.read()
+                    image = ImagePoster(image=image_data, post_id=blog_post.id)
+                    image.post_id = blog_post.id
+                    session.add(image)
+        session.commit()
+        # print(session.query(ImagePoster).filter(ImagePoster.post_id == blog_post.id).first())
         return redirect(url_for('profile.index'))
 
-    return render_template('blog/create.html')
+    return render_template('blog/create.html', form=form)
 
 @blog_bp.route('/<int:post_id>')
 @login_required
@@ -62,6 +74,8 @@ def edit_blog_post(post_id):
 def delete(post_id):
     session = create_session()
     post = session.query(Poster).get(post_id)
+    for image in session.query(ImagePoster).filter(ImagePoster.post_id == post.id):
+        session.delete(image)
     if not post:
         flash('Запись не найдена.', 'danger')
         return redirect(url_for('profile.index'))
