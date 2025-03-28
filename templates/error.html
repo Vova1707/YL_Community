@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+    <p class="text-primary" data-theme="dark" style="font-size: 100px;">{{ code }}</p>
+    <p style="font-size: 30px;">{{ text }}</p>
+    <div class="d-flex gap-3">
+        {% for tag in tags %}
+            <div class="text-secondary" data-theme="dark" style="font-size: 22px;">#{{ tag }}</div>
+        {% endfor %}
+    </div>
+{% endblock %}
