@@ -4,16 +4,28 @@
 
 {% block content %}
     <h1>Редактировать запись в блоге</h1>
-    <form method="POST" action="">
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
         <div class="form-group">
-            <label for="title">Заголовок:</label>
-            <input type="text" class="form-control" id="title" name="title" value="{{ post.title }}" required>
+            {{ form.title.label }}
+            {{ form.title(class="form-control") }}
         </div>
         <div class="form-group">
-            <label for="content">Содержание:</label>
-            <textarea class="form-control" id="content" name="content" rows="5" required>{{ post.content }}</textarea>
+            {{ form.description.label }}
+            {{ form.description(class="form-control") }}
         </div>
-        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
-        <a class="btn btn-secondary" href="{{ url_for('profile.index') }}">Отмена</a>
+        <div class="form-group">
+            {{ form.images.label }}
+            {{ form.images(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.images.label }}
+            {{ form.images(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.images.label }}
+            {{ form.images(class="form-control") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
 {% endblock %}

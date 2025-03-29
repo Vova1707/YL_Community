@@ -8,7 +8,7 @@ from routes.rating_routes import rating_bp
 from settings import settings
 from db_session import global_init, create_session
 from models.users import User
-from models.blog import Poster
+from models.blog import Poster, ImagePoster
 
 import base64
 import os
@@ -58,7 +58,12 @@ def index():
         news_data.append([new_header, new_data, new_date])
     session = create_session()
     posts = session.query(Poster).all()
-    return render_template('index.html', news_data=news_data, posts=posts)
+    images = {}
+    for post in posts:
+        image = session.query(ImagePoster).filter(ImagePoster.post_id == post.id).first()
+        if image:
+            images[post.id] = image.image
+    return render_template('index.html', news_data=news_data, posts=posts, images=images)
 
 
 data_errors = {

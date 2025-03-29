@@ -169,13 +169,51 @@
     </div>
 </div>
 <h1>Лента постов</h1>
-{% for post in posts %}
-<div class="card">
-    <div class="card-body">
-        <h1>{{ post.title }}</h1>
-    <p class="text-muted">Дата: {{ post.date_posted }}</p>
-    <p>{{ post.content }}</p>
-{% endfor %}
+<div class="input-group">
+    <input type="search" class="form-control rounded" placeholder="Поиск" aria-label="Поиск" aria-describedby="search-addon" />
+    <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init>search</button>
 </div>
+<h1></h1>
+<div class="container">
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-6 mb-3">
+            <div class="card h-100" style="min-height: 200px;">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div class="d-flex align-items-start">
+                            {% if post.id in images and images[post.id] %}
+                            <div class="mr-2">
+                                <img src="data:image/jpeg;base64,{{ base64.b64encode(images[post.id]).decode('utf-8') }}"
+                                     class="card-img-top"
+                                     style="max-width: 500px; max-height: 500px; object-fit: cover;"
+                                     alt="Аватарка">
+                            </div>
+                            {% endif %}
+                            <div>
+                                <h6 class="mb-0">{{ post.user.username }}</h6>
+                            </div>
+                        </div>
+
+                    </div>
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text flex-grow-1" style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">{{ post.description }}</p>  <!-- flex-grow-1 чтобы текст занимал доступное пространство -->
+
+                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                        <div>
+                            <a role="button" class="btn btn-primary btn-sm mr-2"
+                               href="{{ url_for('blog.edit_blog_post', post_id=post.id) }}">Редактировать</a>
+                            <a role="button" class="btn btn-danger btn-sm"
+                               href="{{ url_for('blog.delete', post_id=post.id) }}">Удалить</a>
+                            <a role="button" class="btn btn-info btn-sm"
+                               href="{{ url_for('blog.poster_detail', post_id=post.id) }}">Подробнее</a>
+                        </div>
+                        <small class="text-muted">{{ post.date_posted|date }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

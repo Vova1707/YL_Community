@@ -3,6 +3,10 @@ from dotenv import load_dotenv
 from flask_debugtoolbar import DebugToolbarExtension
 
 
+def format_datetime(value, format='%Y-%m-%d %H:%M'):
+    return value.strftime(format)
+
+
 def settings(app):
     load_dotenv()
     # HOST и PORT
@@ -12,7 +16,7 @@ def settings(app):
     # Основные настройки
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your_default_secret_key')
     app.config['DEBUG'] = os.environ.get('DEBUG', 'True').lower() == 'true'
-    print(app.config['DEBUG'])
+
     if app.config['DEBUG']:
         toolbar = DebugToolbarExtension(app)
         app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
@@ -22,4 +26,6 @@ def settings(app):
 
     # Путь до базы данных
     app.config['DATABASE_URI'] = os.environ.get('DATABASE_URI', f'{db_file}')
+
+    app.jinja_env.filters['date'] = format_datetime
 

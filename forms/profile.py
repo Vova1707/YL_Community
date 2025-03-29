@@ -4,10 +4,10 @@ from wtforms.validators import DataRequired
 
 
 class Profile_edit_form(FlaskForm):
-    name = StringField("Название:", validators=[DataRequired()])
-    surname = TextAreaField()
-    age = IntegerField()
-    email = EmailField()
-    about = TextAreaField()
-    image_profile = FileField('Архив вашего проекта', validators=[DataRequired()])
+    name = StringField("Имя:", validators=[DataRequired()])
+    surname = TextAreaField("Фамилия:")
+    age = IntegerField("Сколько лет:")
+    email = EmailField("Email:")
+    about = TextAreaField("Немного о себе:")
+    image_profile = FileField('Фото профиля')
     submit = SubmitField("Сохранить")

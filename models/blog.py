@@ -20,6 +20,7 @@ class Poster(SqlAlchemyBase):
     user = relationship("User", back_populates="posters")
     comments = relationship("CommentPoster", back_populates="post")
     images = relationship("ImagePoster", back_populates="post")
+    like = relationship("LikePoster", back_populates="post")
 
 
 class ImagePoster(SqlAlchemyBase):
@@ -41,3 +42,15 @@ class CommentPoster(SqlAlchemyBase):
     # Relationships
     post = relationship("Poster", back_populates="comments")
     user = relationship("User", back_populates="comments")
+
+
+class LikePoster(SqlAlchemyBase):
+    __tablename__ = 'likes_poster'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    post_id = Column(Integer, ForeignKey('poster.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    likes = Column(Integer, default=0)
+
+    post = relationship("Poster", back_populates="like")
+    user = relationship("User", back_populates="like")

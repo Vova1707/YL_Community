@@ -1,9 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
 from db_session import create_session
-from models.blog import Poster, ImagePoster
-from models.users import User
-from forms.blog import BlogForms
+from models.blog import Poster, ImagePoster, CommentPoster, LikePoster
+from forms.blog import BlogForms, CommentForm
 
 blog_bp = Blueprint('blog', __name__, url_prefix='/blog')
 
@@ -48,26 +47,45 @@ def view_blog_post(post_id):
 @blog_bp.route('/<int:post_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_blog_post(post_id):
+    form = BlogForms()
     session = create_session()
     post = session.query(Poster).get(post_id)
+
     if not post:
         flash('Запись не найдена.', 'danger')
         return redirect(url_for('profile.index'))
 
+    list_of_image = [0] * 3
+    for index, image in enumerate(session.query(ImagePoster).filter(ImagePoster.post_id == post_id)):
+        list_of_image[index] = image
+
     if request.method == 'POST':
-        title = request.form.get('title')
-        content = request.form.get('content')
 
-        if title and content:
-            post.title = title
-            post.content = content
-            session.commit()
-            flash('Запись успешно обновлена!', 'success')
-            return redirect(url_for('profile.index'))
-        else:
-            flash('Заголовок и содержимое обязательны.', 'danger')
+        post.title = form.title.data
+        post.description = form.description.data
+        images = form.images.data
 
-    return render_template('blog/edit.html', post=post)
+        for index, image_form in enumerate(images):
+            if image_form:
+                image_data = image_form.read()
+                if list_of_image[index] != 0:
+                    list_of_image[index].image = image_data
+                else:
+                    image = ImagePoster(image=image_data, post_id=post_id)
+                    image.post_id = post_id
+                    session.add(image)
+            else:
+                if list_of_image[index] != 0:
+                    session.delete(list_of_image[index])
+        session.commit()
+        return redirect(url_for('profile.index'))
+
+    form.title.data = post.title
+    form.description.data = post.description
+    return render_template('blog/edit.html', form=form)
+
+
+
 
 @blog_bp.route('/<int:post_id>/delete')
 @login_required
@@ -84,7 +102,67 @@ def delete(post_id):
     return redirect(url_for('profile.index'))
 
 
-@blog_bp.route('/all')
+@blog_bp.route('/post_detail/<int:post_id>', methods=['GET', 'POST'])
+def poster_detail(post_id):
+    form = CommentForm()
+    session = create_session()
+    poster = session.query(Poster).get(post_id)
+    images = session.query(ImagePoster).filter(ImagePoster.post_id == post_id)
+    comments = session.query(CommentPoster).filter(CommentPoster.post_id == post_id)
+    if form.validate_on_submit():
+        new_comment = CommentPoster(
+            text=form.text.data,
+            post_id=poster.id,
+            user_id=current_user.id,
+        )
+        session.add(new_comment)
+        session.commit()
+    return render_template('blog/poster_detail.html', poster=poster, form=form, images=images, comments=comments)
+
+
+
+@blog_bp.route('like/<int:post_id>', methods=['POST'])
+@login_required
+def like_poster(post_id):
+    session = create_session()
+    like_user = session.query(LikePoster).filter(LikePoster.post_id == post_id, LikePoster.user_id==current_user.id).first()
+    poster = session.query(Poster).get(post_id)
+    if like_user:
+        print('Лайк', like_user.likes)
+        if like_user.likes == -1:
+            poster.dislikes -= 1
+            poster.likes += 1
+            like_user.likes = 1
+    else:
+        likes = LikePoster(post_id=post_id, user_id=current_user.id, likes=1)
+        session.add(likes)
+        poster.likes += 1
+    session.commit()
+    print('Лайки поста:', poster.likes, 'Дизлайки поста', poster.dislikes)
+    return redirect(url_for('blog.poster_detail', post_id=post_id))
+
+
+@blog_bp.route('dislike/<int:post_id>', methods=['POST'])
+@login_required
+def dislike_poster(post_id):
+    session = create_session()
+    like_user = session.query(LikePoster).filter(LikePoster.post_id == post_id, LikePoster.user_id==current_user.id).first()
+    poster = session.query(Poster).get(post_id)
+    if like_user:
+        print('Лайк', like_user.likes)
+        if like_user.likes == 1:
+            poster.likes -= 1
+            poster.dislikes += 1
+            like_user.likes = -1
+    else:
+        likes = LikePoster(post_id=post_id, user_id=current_user.id, likes=-1)
+        session.add(likes)
+        poster.dislikes += 1
+    session.commit()
+    print('Лайки поста:', poster.likes, 'Дизлайки поста', poster.dislikes)
+    return redirect(url_for('blog.poster_detail', post_id=post_id))
+
+
 @login_required
 def all_blogs():
     session = create_session()

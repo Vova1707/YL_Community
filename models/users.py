@@ -25,6 +25,7 @@ class User(SqlAlchemyBase, UserMixin):
     comments = relationship("CommentPoster", back_populates="user")
     projects = relationship("Project", back_populates="user")
     programs = relationship("Program", back_populates="user")
+    like = relationship("LikePoster", back_populates="user")
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

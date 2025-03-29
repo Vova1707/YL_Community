@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}{{ poster.title }}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/poster_detail.css') }}">
+<h1>{{ poster.title }}</h1>
+<p>{{ poster.description }}</p>
+
+<h2>Изображения:</h2>
+<div class="images">
+    {% for image in images %}
+        <img src="data:image/jpeg;base64,{{ base64.b64encode(image.image).decode('utf-8') }}" alt="Image" style="max-width: 300px;">
+    {% endfor %}
+</div>
+
+<p>Теги: {{ poster.tags }}</p>
+<p>Категория: {{ poster.category }}</p>
+<p>Лайки: {{ poster.likes }}</p>
+<p>Дизлайки: {{ poster.dislikes }}</p>
+
+<div class="like-dislike">
+    <form method="POST" action="{{ url_for('blog.like_poster', post_id=poster.id) }}">
+        <button type="submit" class="btn btn-success btn-sm" {% if has_liked %}disabled{% endif %}>
+            <img src="{{ url_for('static', filename='img/like.png') }}" alt="Лайк" style="height: 30px; width: 40px">
+        </button>
+    </form>
+    <form method="POST" action="{{ url_for('blog.dislike_poster', post_id=poster.id) }}">
+        <button type="submit" class="btn btn-success btn-sm" {% if has_liked %}disabled{% endif %}>
+            <img src="{{ url_for('static', filename='img/dislike.png') }}" style="height: 30px; width: 30px" alt="Дизлайк">
+        </button>
+    </form>
+</div>
+
+<div class="comments">
+    <h2>Комментарии:</h2>
+    {% if comments %}
+        {% for comment in comments %}
+            <div class="comment">
+                <div class="comment-body">
+                    {{ current_user.name }}: {{ comment.text }}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Пока нет комментариев.</p>
+    {% endif %}
+
+    <h3>Оставить комментарий:</h3>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.text.label }}
+            {{ form.text(class="form-control") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Отправить</button>
+    </form>
+</div>
+
+<a role="button" class="btn btn-primary btn-sm mr-2" href="{{ url_for('profile.index') }}">Вернуться на главную</a>
+{% endblock %}
