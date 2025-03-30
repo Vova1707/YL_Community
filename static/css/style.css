@@ -1,5 +1,5 @@
 :root {
-    --main-color: #c5c100;
+    --main-color: #d7cb34;
     --dopmain-color: #fffab2;
     --lightmain-color: #fffbeb;
     --darkmain-color: #4d4d00;
@@ -10,7 +10,11 @@
     --darksecond-color: #481a11;
     --dark-color: #b2b2b2;
     --dopdark-color: #818181;
+
     --bg-dark-color: rgb(33, 37, 41);
+    --bg-light-color: rgb(254, 255, 254);
+    --bg-dark-blur-color: rgba(154, 158, 164, 0.3);
+    --bg-light-blur-color: rgba(254, 255, 254, 0.3);
 
     --bg-code-editor-dark:  rgb(33, 37, 41, 0);
     --bg-code-editor-mid:  rgb(33, 37, 41, 0.8);
@@ -223,6 +227,14 @@ h1[data-theme="light"] {
     color: var(--second-color) !important;
     border-color: rgba(0, 0, 0, 0) !important;
 }
+h2[data-theme="dark"] {
+    color: var(--dopmain-color) !important;
+    border-color: rgba(0, 0, 0, 0) !important;
+}
+h2[data-theme="light"] {
+    color: var(--main-color) !important;
+    border-color: rgba(0, 0, 0, 0) !important;
+}
 
 
 .accordion-button:not(.collapsed) {
@@ -263,7 +275,7 @@ width: 75%;
 }
 
 .resizer {
-width: 4px;
+width: 5px;
 cursor: ew-resize;
 background-color: var(--main-color);
 transition: background-color 0.2s;
@@ -271,4 +283,69 @@ transition: background-color 0.2s;
 
 .resizer:hover {
 background-color: var(--dopmain-color);
+}
+
+.carousel-control-prev {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    height: 300px;
+    font-size: 60px;
+    position: absolute; left: -100px;
+    opacity: 1;
+    align-self: center;
+    clip-path: url(#carousel-control-prev);
+}
+.carousel-control-next {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    height: 300px;
+    font-size: 60px;
+    position: absolute; right: -100px;
+    opacity: 1;
+    align-self: center;
+    clip-path: url(#carousel-control-next);
+}
+.carousel-control-prev[data-theme="dark"], .carousel-control-next[data-theme="dark"] { color: var(--bg-dark-color); background: var(--bg-light-blur-color); }
+.carousel-control-prev[data-theme="light"], .carousel-control-next[data-theme="light"] { color: var(--bg-light-color); background: var(--bg-dark-blur-color); }
+.carousel-control-prev:default[data-theme="dark"], .carousel-control-next:default[data-theme="dark"] { color: var(--bg-dark-color); opacity: 1; }
+.carousel-control-prev:default[data-theme="light"], .carousel-control-next:default[data-theme="light"] { color: var(--bg-light-color); opacity: 1; }
+.carousel-control-prev:focus[data-theme="dark"], .carousel-control-next:focus[data-theme="dark"] { color: var(--bg-dark-color); opacity: 1; }
+.carousel-control-prev:focus[data-theme="light"], .carousel-control-next:focus[data-theme="light"] { color: var(--bg-light-color); opacity: 1; }
+.carousel-control-prev:active[data-theme="dark"], .carousel-control-next:active[data-theme="dark"] { color: var(--bg-dark-color); opacity: 1; }
+.carousel-control-prev:active[data-theme="light"], .carousel-control-next:active[data-theme="light"] { color: var(--bg-light-color); opacity: 1; }
+.carousel-control-prev:hover[data-theme="dark"], .carousel-control-next:hover[data-theme="dark"] { color: var(--dopsecond-color); opacity: 1; }
+.carousel-control-prev:hover[data-theme="light"], .carousel-control-next:hover[data-theme="light"] { color: var(--second-color); opacity: 1; }
+
+
+.btn-check-text[data-theme="dark"] {
+    color: var(--dark-color);
+    background-color: rgba(0, 0, 0, 0);
+    border-color: var(--dopmain-color);
+}
+.btn-check:checked[data-theme="dark"] + .btn-check-text[data-theme="dark"] {
+    color: var(--dopmain-color);
+    background: var(--bg-light-blur-color);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+input[type="radio"]:not(:checked)[data-theme="dark"] + label:hover[data-theme="dark"] {
+    color: var(--dopmain-color);
+    border-color: var(--dopmain-color);
+}
+.btn-check-text[data-theme="light"] {
+    color: var(--dopdark-color);
+    background-color: rgba(0, 0, 0, 0);
+    border-color: var(--second-color);
+}
+.btn-check:checked[data-theme="light"] + .btn-check-text[data-theme="light"] {
+    color: var(--second-color);
+    background: var(--bg-dark-blur-color);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+input[type="radio"]:not(:checked)[data-theme="light"] + label:hover[data-theme="light"] {
+    color: var(--second-color);
+    border-color: var(--second-color);
 }

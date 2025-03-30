@@ -177,7 +177,7 @@
 
                         function update_theme(theme) {
                             console.log(theme)
-                            for (const name_class of ['text-primary', 'text-secondary', 'div-code-editor', 'list-group-item']) {
+                            for (const name_class of ['text-primary', 'text-secondary', 'div-code-editor', 'list-group-item', 'carousel-control-prev', 'carousel-control-next', 'btn-check', 'btn-check-text']) {
                                 for (const el of document.getElementsByClassName(name_class)) {
                                     el.setAttribute('data-theme', theme);
                                 }
@@ -187,9 +187,12 @@
                                     el.setAttribute('data-theme', theme);
                                 }
                             }
-                            for (const name_id of ['archive-tree']) {
-                                document.getElementById(name_id).setAttribute('data-theme', theme);
-                            }
+                            /* for (const name_id of ['archive-tree']) {
+                                if (document.getElementById(name_id)) {
+                                    console.log("INTO");
+                                    document.getElementById(name_id).setAttribute('data-theme', theme);
+                                }
+                            } */
                             theme_button.textContent = `Тема: ${theme === 'light' ? 'Светлая' : 'Тёмная'}`
                         }
                     </script>

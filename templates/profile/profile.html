@@ -28,7 +28,6 @@
                                 <div><strong>Имя:</strong> {{ current_user.username }}</div>
                                 <div><strong>Почта:</strong> {{ current_user.email }}</div>
                                 <div><strong>Описание:</strong> {{ current_user.about }}</div>
-                                <a role="button" class="btn btn-primary" href="{{ url_for('blog.create_blog_post') }}">Новая запись</a>
                             </div>
                         </div>
                     </div>
@@ -72,9 +71,12 @@
                 </div>
             </div>
         </div>
-        <div class="container">
     </div>
-        <h1>Ваши посты</h1>
+    <div class="row">
+        <div class="col"><h1>Ваши посты</h1></div>
+        <div class="col" style="text-align: right;"><a role="button" class="btn btn-primary" href="{{ url_for('blog.create_blog_post') }}">Новая запись</a></div>
+
+    </div>
 <div class="container">
     <div class="row">
         {% for post in posts %}

@@ -15,7 +15,7 @@
 
     <div class="container container-resizer"> <!-- style="margin: 0 0; padding: 0 0;" -->
         <div class="box box1">
-            <div class="accordion-body m-1" data-theme="dark" style="position: relative">
+            <div class="accordion-body m-0" data-theme="dark" style="position: relative">
               {% if file_tree %}
                   <ul class="div-code-editor list-group">
                     {% macro render_tree(tree, parent_id='root') %}
@@ -45,7 +45,7 @@
         </div>
         <div class="resizer"></div>
         <div class="box box2">
-            <div class="div-code-editor m-1" data-theme="dark"><textarea class="CodeMirror" id="editor">{{ file_data }}</textarea></div>
+            <div class="div-code-editor m-0" data-theme="dark"><textarea class="CodeMirror" id="editor">{{ file_data }}</textarea></div>
             <script>
                 var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
                     mode: "python",
@@ -69,34 +69,6 @@
                     editor.style.height = editor.scrollHeight + "px";
                 }); */
             </script>
-            <select id="font-editor-select" class="form-select m-1 p-1 w-auto">
-                <option value="yltheme">встроенная тема</option>
-                <option value="monokai">monokai</option>
-                <option value="dracula">dracula</option>
-                <option value="material">material</option>
-                <option value="tomorrow-night-bright">tomorrow-night-bright</option>
-                <option value="default">default</option>
-                <option value="eclipse">eclipse</option>
-                <option value="idea">idea</option>
-            </select>
-            <script>
-                const font_editor = document.getElementById('font-editor-select');
-
-                const saved_font_editor = localStorage.getItem('FontEditorSelected');
-                if (saved_font_editor) {
-                    console.log(saved_font_editor);
-                    editor.setOption("theme", saved_font_editor);
-                    font_editor.value = saved_font_editor;
-                }
-
-                font_editor.addEventListener('change', function() {
-                    const FontEditorSelected = this.value;
-                    editor.setOption("theme", FontEditorSelected);
-                    // CodeMirror(document.getElementById("editor")).setOption("theme", font_editor_selected);
-
-                    localStorage.setItem('FontEditorSelected', FontEditorSelected);
-                });
-            </script>
         </div>
     </div>
     <script>
@@ -118,7 +90,7 @@
         let newBox1Width = event.clientX - resizer.parentElement.offsetLeft;
 
         // Ограничения по минимальной ширине
-        const minWidth = 50;
+        const minWidth = 200;
         const maxWidth = containerWidth - minWidth;
 
         if (newBox1Width < minWidth) newBox1Width = minWidth;
@@ -127,5 +99,33 @@
         box1.style.width = newBox1Width + 'px';
         box2.style.width = (containerWidth - newBox1Width - resizer.offsetWidth) + 'px';
       }
+    </script>
+    <select id="font-editor-select" class="form-select m-1 p-1 w-auto">
+        <option value="yltheme">встроенная тема</option>
+        <option value="monokai">monokai</option>
+        <option value="dracula">dracula</option>
+        <option value="material">material</option>
+        <option value="tomorrow-night-bright">tomorrow-night-bright</option>
+        <option value="default">default</option>
+        <option value="eclipse">eclipse</option>
+        <option value="idea">idea</option>
+    </select>
+    <script>
+        const font_editor = document.getElementById('font-editor-select');
+
+        const saved_font_editor = localStorage.getItem('FontEditorSelected');
+        if (saved_font_editor) {
+            console.log(saved_font_editor);
+            editor.setOption("theme", saved_font_editor);
+            font_editor.value = saved_font_editor;
+        }
+
+        font_editor.addEventListener('change', function() {
+            const FontEditorSelected = this.value;
+            editor.setOption("theme", FontEditorSelected);
+            // CodeMirror(document.getElementById("editor")).setOption("theme", font_editor_selected);
+
+            localStorage.setItem('FontEditorSelected', FontEditorSelected);
+        });
     </script>
 {% endblock %}

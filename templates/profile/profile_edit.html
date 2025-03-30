@@ -2,7 +2,12 @@
 
 {% block content %}
     <h1>Редактировать профиль</h1>
-    <form method="POST" enctype="multipart/form-data">
+    <style>
+        #local-form-items div {
+            margin-bottom: 10px; /* Отступ справа */
+        }
+    </style>
+    <form method="POST" enctype="multipart/form-data" id="local-form-items">
         {{ form.hidden_tag() }}
         <div class="form-group">
             {{ form.name.label }}
@@ -26,8 +31,10 @@
         </div>
         <div class="form-group">
             {{ form.image_profile.label }}
-            {{ form.image_profile(class="form-control-file") }}
+            {{ form.image_profile(class="form-control") }}
         </div>
+
         <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a class="btn btn-secondary" href="{{ url_for('profile.index') }}">Отмена</a>
     </form>
 {% endblock %}
