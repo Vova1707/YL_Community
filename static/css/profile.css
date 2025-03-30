@@ -1,0 +1,44 @@
+/* Общие стили для стрелок */
+.carousel-control-prev,
+.carousel-control-next {
+  width: 40px; /* Измените размер стрелок, если нужно */
+  height: 40px;
+  border-radius: 50%; /* Делаем круглыми */
+  background-color: rgba(255, 255, 0, 0.5); /* Желтый с прозрачностью */
+  opacity: 0.7; /* Прозрачность при наведении */
+  transition: opacity 0.3s ease; /* Плавное изменение прозрачности */
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  opacity: 1; /* Увеличиваем прозрачность при наведении */
+}
+
+/* Убираем текст */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-image: none; /* Убираем стандартные иконки */
+}
+
+/* Добавляем свои иконки (если нужно) */
+.carousel-control-prev::before {
+    content: '\2039'; /* Unicode символ стрелки влево */
+    color: black; /* Цвет стрелки */
+    font-size: 30px;
+}
+
+.carousel-control-next::before {
+    content: '\203A'; /* Unicode символ стрелки вправо */
+    color: black; /* Цвет стрелки */
+    font-size: 30px;
+}
+
+
+/* Позиционирование стрелок (подстройте под вашу карусель) */
+.carousel-control-prev {
+    left: 10px; /* Отступ слева */
+}
+
+.carousel-control-next {
+    right: 10px; /* Отступ справа */
+}

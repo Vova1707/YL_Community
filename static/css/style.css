@@ -272,3 +272,16 @@ transition: background-color 0.2s;
 .resizer:hover {
 background-color: var(--dopmain-color);
 }
+
+.dislike-like img, .like-dislike img {
+    background-color: transparent; /*или rgba(0,0,0,0)*/ /* Делаем фон прозрачным */
+}
+
+.dislike-like img, .like-dislike img {
+    filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));  /* Прозрачная тень, имитация прозрачности (не всегда работает) */
+}
+
+.dislike-like button, .like-dislike button {
+    width: 40px; /* Или другое желаемое значение */
+    padding: 0; /* Уберите padding, чтобы кнопки были меньше */
+}

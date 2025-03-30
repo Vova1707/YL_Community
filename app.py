@@ -60,9 +60,9 @@ def index():
     posts = session.query(Poster).all()
     images = {}
     for post in posts:
-        image = session.query(ImagePoster).filter(ImagePoster.post_id == post.id).first()
-        if image:
-            images[post.id] = image.image
+        images[post.id] = []
+        for image in session.query(ImagePoster).filter(ImagePoster.post_id == post.id):
+            images[post.id].append(image.image)
     return render_template('index.html', news_data=news_data, posts=posts, images=images)
 
 

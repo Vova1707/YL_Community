@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
 from flask_login import login_required, current_user
 from db_session import create_session
 from models.blog import Poster, ImagePoster, CommentPoster, LikePoster
@@ -11,10 +11,9 @@ blog_bp = Blueprint('blog', __name__, url_prefix='/blog')
 def create_blog_post():
     form = BlogForms()
     if request.method == 'POST':
-        title = form.title.data
         description = form.description.data
         session = create_session()
-        blog_post = Poster(title=title, description=description, user_id=current_user.id)
+        blog_post = Poster(description=description, user_id=current_user.id)
         session.add(blog_post)
         session.commit()
         images = form.images.data
@@ -61,7 +60,6 @@ def edit_blog_post(post_id):
 
     if request.method == 'POST':
 
-        post.title = form.title.data
         post.description = form.description.data
         images = form.images.data
 
@@ -80,7 +78,6 @@ def edit_blog_post(post_id):
         session.commit()
         return redirect(url_for('profile.index'))
 
-    form.title.data = post.title
     form.description.data = post.description
     return render_template('blog/edit.html', form=form)
 
@@ -107,7 +104,7 @@ def poster_detail(post_id):
     form = CommentForm()
     session = create_session()
     poster = session.query(Poster).get(post_id)
-    images = session.query(ImagePoster).filter(ImagePoster.post_id == post_id)
+    images = [image.image for image in session.query(ImagePoster).filter(ImagePoster.post_id == post_id)]
     comments = session.query(CommentPoster).filter(CommentPoster.post_id == post_id)
     if form.validate_on_submit():
         new_comment = CommentPoster(
@@ -121,46 +118,78 @@ def poster_detail(post_id):
 
 
 
-@blog_bp.route('like/<int:post_id>', methods=['POST'])
+@blog_bp.route('/like/<int:post_id>', methods=['POST'])
 @login_required
 def like_poster(post_id):
-    session = create_session()
-    like_user = session.query(LikePoster).filter(LikePoster.post_id == post_id, LikePoster.user_id==current_user.id).first()
-    poster = session.query(Poster).get(post_id)
-    if like_user:
-        print('Лайк', like_user.likes)
-        if like_user.likes == -1:
-            poster.dislikes -= 1
+    db_session = create_session()
+    try:
+        like_user = db_session.query(LikePoster).filter(
+            LikePoster.post_id == post_id,
+            LikePoster.user_id == current_user.id
+        ).first()
+
+        poster = db_session.query(Poster).get(post_id)
+
+        if not poster:
+            return jsonify({'error': 'Poster not found'}), 404
+
+        if like_user:
+            if like_user.likes == -1:
+                poster.dislikes -= 1
+                poster.dislikes = max(0, poster.dislikes)
+                poster.likes += 1
+                like_user.likes = 1
+        else:
+            likes = LikePoster(post_id=post_id, user_id=current_user.id, likes=1)
+            db_session.add(likes)
             poster.likes += 1
-            like_user.likes = 1
-    else:
-        likes = LikePoster(post_id=post_id, user_id=current_user.id, likes=1)
-        session.add(likes)
-        poster.likes += 1
-    session.commit()
-    print('Лайки поста:', poster.likes, 'Дизлайки поста', poster.dislikes)
-    return redirect(url_for('blog.poster_detail', post_id=post_id))
+
+        db_session.commit()
+        return jsonify({'likes': poster.likes, 'dislikes': poster.dislikes})
+
+    except Exception as e:
+        db_session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+    finally:
+        db_session.close()
 
 
-@blog_bp.route('dislike/<int:post_id>', methods=['POST'])
+@blog_bp.route('/dislike/<int:post_id>', methods=['POST'])
 @login_required
 def dislike_poster(post_id):
-    session = create_session()
-    like_user = session.query(LikePoster).filter(LikePoster.post_id == post_id, LikePoster.user_id==current_user.id).first()
-    poster = session.query(Poster).get(post_id)
-    if like_user:
-        print('Лайк', like_user.likes)
-        if like_user.likes == 1:
-            poster.likes -= 1
+    db_session = create_session()
+    try:
+        like_user = db_session.query(LikePoster).filter(
+            LikePoster.post_id == post_id,
+            LikePoster.user_id == current_user.id
+        ).first()
+
+        poster = db_session.query(Poster).get(post_id)
+
+        if not poster:
+            return jsonify({'error': 'Poster not found'}), 404
+
+        if like_user:
+            if like_user.likes == 1:
+                poster.likes -= 1
+                poster.likes = max(0, poster.likes)
+                poster.dislikes += 1
+                like_user.likes = -1
+        else:
+            likes = LikePoster(post_id=post_id, user_id=current_user.id, likes=-1)
+            db_session.add(likes)
             poster.dislikes += 1
-            like_user.likes = -1
-    else:
-        likes = LikePoster(post_id=post_id, user_id=current_user.id, likes=-1)
-        session.add(likes)
-        poster.dislikes += 1
-    session.commit()
-    print('Лайки поста:', poster.likes, 'Дизлайки поста', poster.dislikes)
-    return redirect(url_for('blog.poster_detail', post_id=post_id))
+
+        db_session.commit()
+        return jsonify({'likes': poster.likes, 'dislikes': poster.dislikes})
+
+    except Exception as e:
+        db_session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+    finally:
+        db_session.close()
 
 
 @login_required

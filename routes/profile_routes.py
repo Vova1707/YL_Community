@@ -86,9 +86,10 @@ def index():
     posts = session.query(Poster).filter(Poster.user_id == current_user.id)
     images = {}
     for post in posts:
-        image = session.query(ImagePoster).filter(ImagePoster.post_id == post.id).first()
-        if image:
-            images[post.id] = image.image
+        images[post.id] = []
+        for image in session.query(ImagePoster).filter(ImagePoster.post_id == post.id):
+            images[post.id].append(image.image)
+
     projects = session.query(Project).filter(Project.user_id == current_user.id)
     return render_template('profile/profile.html', posts=posts, projects=projects, user=user, images=images)
 
