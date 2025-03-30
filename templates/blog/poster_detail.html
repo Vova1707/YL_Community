@@ -3,34 +3,39 @@
 {% block title %}{{ poster.title }}{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/poster_detail.css') }}">
-<h1>{{ poster.title }}</h1>
-<p>{{ poster.description }}</p>
 
-<h2>Изображения:</h2>
-<div class="images">
-    {% for image in images %}
-        <img src="data:image/jpeg;base64,{{ base64.b64encode(image.image).decode('utf-8') }}" alt="Image" style="max-width: 300px;">
-    {% endfor %}
-</div>
+<div class="card-body">
+                    {% if images|length > 0 %}
+                        <div id="carouselExampleControls-{{ poster.id }}" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                                {% for image in images %}
+                                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                        <img src="data:image/jpeg;base64,{{ base64.b64encode(image).decode('utf-8') }}"
+                                             class="d-block w-100" style="height: 400px; width:auto max_width: 500; object-fit: cover;"
+                                             alt="Изображение">
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleControls-{{ poster.id }}" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only"></span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleControls-{{ poster.id }}" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only"></span>
+                            </a>
+                        </div>
+                    {% endif %}
+<p>{{ poster.description }}</p>
 
 <p>Теги: {{ poster.tags }}</p>
 <p>Категория: {{ poster.category }}</p>
-<p>Лайки: {{ poster.likes }}</p>
-<p>Дизлайки: {{ poster.dislikes }}</p>
 
-<div class="like-dislike">
-    <form method="POST" action="{{ url_for('blog.like_poster', post_id=poster.id) }}">
-        <button type="submit" class="btn btn-success btn-sm" {% if has_liked %}disabled{% endif %}>
-            <img src="{{ url_for('static', filename='img/like.png') }}" alt="Лайк" style="height: 30px; width: 40px">
-        </button>
-    </form>
-    <form method="POST" action="{{ url_for('blog.dislike_poster', post_id=poster.id) }}">
-        <button type="submit" class="btn btn-success btn-sm" {% if has_liked %}disabled{% endif %}>
-            <img src="{{ url_for('static', filename='img/dislike.png') }}" style="height: 30px; width: 30px" alt="Дизлайк">
-        </button>
-    </form>
-</div>
 
 <div class="comments">
     <h2>Комментарии:</h2>

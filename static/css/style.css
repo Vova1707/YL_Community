@@ -1,5 +1,5 @@
 :root {
-    --main-color: #d7cb34;
+    --main-color: #c5c100;
     --dopmain-color: #fffab2;
     --lightmain-color: #fffbeb;
     --darkmain-color: #4d4d00;
@@ -348,4 +348,17 @@ input[type="radio"]:not(:checked)[data-theme="dark"] + label:hover[data-theme="d
 input[type="radio"]:not(:checked)[data-theme="light"] + label:hover[data-theme="light"] {
     color: var(--second-color);
     border-color: var(--second-color);
+}
+
+.dislike-like img, .like-dislike img {
+    background-color: transparent; /*или rgba(0,0,0,0)*/ /* Делаем фон прозрачным */
+}
+
+.dislike-like img, .like-dislike img {
+    filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));  /* Прозрачная тень, имитация прозрачности (не всегда работает) */
+}
+
+.dislike-like button, .like-dislike button {
+    width: 40px; /* Или другое желаемое значение */
+    padding: 0; /* Уберите padding, чтобы кнопки были меньше */
 }
