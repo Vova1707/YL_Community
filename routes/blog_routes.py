@@ -91,6 +91,10 @@ def delete(post_id):
     post = session.query(Poster).get(post_id)
     for image in session.query(ImagePoster).filter(ImagePoster.post_id == post.id):
         session.delete(image)
+    for comment in session.query(CommentPoster).filter(CommentPoster.post_id == post.id):
+        session.delete(comment)
+    for like in session.query(LikePoster).filter(LikePoster.post_id == post.id):
+        session.delete(like)
     if not post:
         flash('Запись не найдена.', 'danger')
         return redirect(url_for('profile.index'))
@@ -192,7 +196,7 @@ def dislike_poster(post_id):
         db_session.close()
 
 
-@login_required
+@blog_bp.route('/', methods=['GET', 'POST'])
 def all_blogs():
     session = create_session()
     posts = session.query(Poster).all()

@@ -80,14 +80,16 @@
             }
         });
     </script>
+<form method="GET" action="/" class="mb-3">
+            <div class="input-group">
+                <input type="search" class="form-control rounded" placeholder="Поиск" aria-label="Поиск" aria-describedby="search-addon" name="search" value="{{ search_query or '' }}">
+                <button type="submit" class="btn btn-outline-primary" data-mdb-ripple-init>Search</button>
+            </div>
+        </form>
 
     <div id="collapseParent">
         <div class="collapse show" id="collapse1" data-bs-parent="#collapseParent">
             <h1>Лента постов</h1>
-            <div class="input-group">
-                <input type="search" class="form-control rounded" placeholder="Поиск" aria-label="Поиск" aria-describedby="search-addon" />
-                <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init>search</button>
-            </div>
 {#            {% include 'includes/blogs.html' %}#}
         </div>
         <div class="collapse" id="collapse2" data-bs-parent="#collapseParent">
@@ -95,4 +97,5 @@
             Пусто
         </div>
     </div>
+{% include 'includes/blogs.html' %}
 {% endblock %}
