@@ -3,9 +3,8 @@
 {% block title %}Главная{% endblock %}
 
 {% block content %}
-    <h1 data-theme="dark">Добро пожаловать в YL Community!</h1>
-    <p>Социальная сеть для учеников Яндекс Лицея и всех, кто связан с Яндекс Образованием.</p>
 
+{% include 'forms/search.html' %}
     <div id="carouselExample" class="carousel slide" data-bs-ride="false" data-bs-interval="0" style="position: relative;">
         <div class="carousel-inner">
           {% for new_data in news_data %}
@@ -80,12 +79,6 @@
             }
         });
     </script>
-    <form method="GET" action="/" class="mb-3">
-        <div class="input-group">
-            <input type="search" class="form-control rounded" placeholder="Поиск" aria-label="Поиск" aria-describedby="search-addon" name="search" value="{{ search_query or '' }}">
-            <button type="submit" class="btn btn-outline-primary" data-mdb-ripple-init>Search</button>
-        </div>
-    </form>
 
     <div id="collapseParent">
         <div class="collapse show" id="collapse1" data-bs-parent="#collapseParent">
@@ -97,4 +90,5 @@
             Пусто
         </div>
     </div>
+{% include 'includes/blogs.html' %}
 {% endblock %}

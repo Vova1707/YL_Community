@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from db_session import create_session
 from models.blog import Poster, ImagePoster, CommentPoster, LikePoster
 from forms.blog import BlogForms, CommentForm
+from models.users import User
 
 blog_bp = Blueprint('blog', __name__, url_prefix='/blog')
 
@@ -196,9 +197,29 @@ def dislike_poster(post_id):
         db_session.close()
 
 
-@blog_bp.route('/', methods=['GET', 'POST'])
+@blog_bp.route('/all', methods=['GET', 'POST'])
 def all_blogs():
     session = create_session()
-    posts = session.query(Poster).all()
+    images = {}
+    search_query = request.args.get('search')
+    search_type = request.args.get('search_type', 'author')
+    posts = []
 
-    return render_template('blog/all.html', posts=posts)
+    if search_query:
+        if search_type == 'content':
+            posts = session.query(Poster).filter(Poster.description.like(f'%{search_query}%')).all()
+        else:
+            users = session.query(User).filter(User.name.like(f'%{search_query}%')).all()
+            for user in users:
+                posts = session.query(Poster).filter(Poster.user_id == user.id)
+
+    for post in posts:
+        images[post.id] = []
+        for image in session.query(ImagePoster).filter(ImagePoster.post_id == post.id):
+            images[post.id].append(image.image)
+
+    return render_template('blog/all.html',
+                           posts=posts,
+                           images=images,
+                           search_query=search_query,
+                           search_type=search_type)
