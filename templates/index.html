@@ -36,8 +36,8 @@
                 </clipPath>
             </defs>
         </svg>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev"><</button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">></button>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev" type_use="news"><</button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next" type_use="news">></button>
     </div>
     <script>
         function equalizeCarouselHeight() {
@@ -90,12 +90,11 @@
     <div id="collapseParent">
         <div class="collapse show" id="collapse1" data-bs-parent="#collapseParent">
             <h1>Лента постов</h1>
-{#            {% include 'includes/blogs.html' %}#}
+            {% include 'includes/blogs.html' %}
         </div>
         <div class="collapse" id="collapse2" data-bs-parent="#collapseParent">
             <h1>Мероприятия и конкурсы</h1>
             Пусто
         </div>
     </div>
-{% include 'includes/blogs.html' %}
 {% endblock %}
