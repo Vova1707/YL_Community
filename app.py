@@ -32,22 +32,6 @@ app.register_blueprint(profile_bp)
 app.register_blueprint(project_bp)
 app.register_blueprint(rating_bp)
 
-theme = "light"
-
-def random_wallpaper_img():
-    coords = [[]]
-    paths = ["img/wallpaper_1.png", "img/wallpaper_2.png"]
-    sizes = [(200, 200), (150, 150)]
-    wallpaper_imgs = []
-    for i in range(5):
-        random_coord, random_ind_img = random.choice(coords), random.choice(paths)
-        wallpaper_imgs.append({
-            "coord": random_coord,
-            "path": paths[random_ind_img],
-            "size": sizes[random_ind_img]
-        })
-    return wallpaper_imgs
-
 @app.route('/')
 def index():
     news_data = []

@@ -1,20 +1,18 @@
-<h1 data-theme="dark">Добро пожаловать в YL Community!</h1>
-<h2 data-theme="dark">Социальная сеть для учеников Яндекс Лицея и всех, кто связан с Яндекс Образованием.</h2>
-<p></p>
+
 <form method="GET" action="{{ url_for('blog.all_blogs') }}" class="mb-3">
     <div class="d-flex align-items-center">
         <div class="me-2">
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <select class="form-select" name="search_type" aria-label="Тип поиска">
                 <option value="author" {% if search_type == 'author' %}selected{% endif %}>Автор</option>
                 <option value="content" {% if search_type == 'content' %}selected{% endif %}>Содержание</option>
             </select>
         </div>
-        <div class="col-md-7">
+        <div class="col-md-9">
             <input type="search" class="form-control rounded" placeholder="Напишите запрос" aria-label="Напишите запрос" aria-describedby="search-addon" name="search" value="{{ search_query or '' }}">
         </div>
-        <div class="col-md-2">
+        <div class="col-md-1">
             <button type="submit" class="btn btn-primary w-100" data-mdb-ripple-init>Найти</button>
         </div>
     </div>

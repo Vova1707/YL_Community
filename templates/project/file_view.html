@@ -1,51 +1,42 @@
 {% extends 'base.html' %}
 
-{% block title %}Файл path{% endblock %}
+{% block title %}Файл {{ orig_path }}{% endblock %}
 
 {% block content %}
     <h1>{{ name_project }}</h1>
 
     <div class="row m-1"> <!-- style="margin: 0 0; padding: 0 0;" -->
-        <div class="col m-0 p-0"><p class="text-primary">{{ path }}</p></div>
         <div class="col-auto m-0 p-0">
-            <a role="button" class="btn btn-primary" href="">Изменить файл</a>
-            <a role="button" class="btn btn-secondary" href="">Удалить файл</a>
-        </div> <!-- yltheme || monokai | dracula | material | tomorrow-night-bright || default | eclipse | idea -->
+            <a role="button" class="btn btn-primary" href="{{ url_for('project.open_project', id=id) }}"><</a>
+        </div>
+        <div class="col ml-auto p-0" style="margin: 0 10px">
+            <p class="text-primary" data-bs-html="true" data-bs-toggle="tooltip"
+               title="{{ orig_path }}"
+               style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%; display: block;">
+                {{ orig_path }}
+            </p>
+        </div>
+        <div class="col-auto m-0 p-0">
+{#            <a role="button" class="btn btn-primary" href="{{ url_for('project.save_file', id_project=id, path=path, new_data) }}"></a>#}
+{#            <form onsubmit="save_code(event)">#}
+{#                <button type="submit">Изменить файл</button>#}
+{#            </form>#}
+            <a role="button" class="btn btn-secondary" href="{{ url_for('project.delete_file', id_project=id, path=path) }}">Удалить файл</a>
+            <button class="btn btn-primary" onclick="save_code()">Сохранить файл</button>
+        </div>
     </div>
 
-    <div class="container container-resizer"> <!-- style="margin: 0 0; padding: 0 0;" -->
+    <div class="container container-resizer m-0 p-0">
         <div class="box box1">
-            <div class="accordion-body m-0" data-theme="dark" style="position: relative">
-              {% if file_tree %}
-                  <ul class="div-code-editor list-group">
-                    {% macro render_tree(tree, parent_id='root') %}
-                        {% for node in tree %}
-                            <li class="list-group-item" id="code-editor" data-theme="dark" style="border: none; box-shadow: none;">
-                                {% if node.type == 'folder' %}
-                                    <button class="btn btn-primary p-0 m-0" id="dop" data-bs-toggle="collapse" data-bs-target="#collapse-{{ parent_id }}-{{ loop.index }}"> <!-- Кнопка для раскрытия вложенной папки -->
-                                        📁 {{ node.name }}
-                                    </button>
-                                    <div id="collapse-{{ parent_id }}-{{ loop.index }}" class="collapse p-0 m-0"> <!-- Контейнер для вложенных элементов -->
-                                        <ul class="list-group p-0 m-0">
-                                            {{ render_tree(node.children, parent_id ~ '-' ~ loop.index) }}
-                                        </ul>
-                                    </div>
-                                {% else %}
-                                    <a class="btn btn-primary p-0 m-0" id="dop" href="{{ url_for("project.open_file", id_project=id, path=node.path) }}">
-                                        📄 {{ node.name }}
-                                    </a>
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    {% endmacro %}
-                    {{ render_tree(file_tree) }}
-                  </ul>
-              {% endif %}
-            </div>
+            {% include 'includes/tree_archive.html' %}
         </div>
         <div class="resizer"></div>
         <div class="box box2">
+            {% if file_data == None %}
+                <p class="text-danger m-3">Файл невозможно открыть :(</p>
+            {% else %}
             <div class="div-code-editor m-0" data-theme="dark"><textarea class="CodeMirror" id="editor">{{ file_data }}</textarea></div>
+            {% endif %}
             <script>
                 var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
                     mode: "python",
@@ -55,6 +46,11 @@
                     //tabSize: 4,
                     //matchBrackets: true
                 });
+                function save_code() {
+                    let data = editor.getValue(); // event.preventDefault();
+                    let encode_data = encodeURIComponent(data);
+                    window.location.href = "http://127.0.0.1:8086/project/{{ id }}/file/save/{{ path }}?new_data=" + encode_data;
+                }
                 /* let previousLines = 1    ;
                 document.getElementById("editor").addEventListener("input", function () {
                     let currentLines = editor.value.split("\n").length;

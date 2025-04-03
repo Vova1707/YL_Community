@@ -4,10 +4,13 @@
 
 {% block content %}
     <h1>{{ name }}</h1>
-    <p>id = {{ id }}</p>
-    <div style="margin: 10px 0; padding: 0 0;">
-        <a role="button" class="btn btn-primary" href="{{ url_for("project.edit_project", id=id) }}">Изменить проект</a>
-        <a role="button" class="btn btn-secondary" href="{{ url_for('project.delete_project', id=id) }}">Удалить</a>
+
+    <div class="row">
+        <div class="col"><p class="text-primary">id = {{ id }}</p></div>
+        <div class="col-auto" style="margin-bottom: 7px">
+            <a role="button" class="btn btn-primary" href="{{ url_for("project.edit_project", id=id) }}">Изменить проект</a>
+            <a role="button" class="btn btn-secondary" href="{{ url_for('project.delete_project', id=id) }}">Удалить</a>
+        </div>
     </div>
 
     <div class="accordion" id="accordionPanelsStayOpenExample">
@@ -18,34 +21,7 @@
           </button>
         </h2>
         <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
-          <div class="accordion-body">
-              {% if file_tree %}
-                <ul class="list-group">
-                    {% macro render_tree(tree, parent_id='root') %}
-                        {% for node in tree %}
-                            <li class="list-group-item" style="border: none; box-shadow: none;">
-                                {% if node.type == 'folder' %}
-                                    <button class="btn btn-primary p-0 m-0" id="dop" data-bs-toggle="collapse" data-bs-target="#collapse-{{ parent_id }}-{{ loop.index }}"> <!-- Кнопка для раскрытия вложенной папки -->
-                                        📁 {{ node.name }}
-                                    </button>
-                                    <div id="collapse-{{ parent_id }}-{{ loop.index }}" class="collapse p-0 m-0"> <!-- Контейнер для вложенных элементов -->
-                                        <ul class="list-group p-0 m-0">
-                                            {{ render_tree(node.children, parent_id ~ '-' ~ loop.index) }}
-                                        </ul>
-                                    </div>
-                                {% else %}
-                                    <a class="btn btn-primary p-0 m-0" id="dop" href="{{ url_for("project.open_file", id_project=id, path=node.path) }}">
-                                        📄 {{ node.name }}
-                                    </a>
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    {% endmacro %}
-
-                    {{ render_tree(file_tree) }}
-                </ul>
-              {% endif %}
-          </div>
+          {% include 'includes/tree_archive.html'%}
         </div>
       </div>
       <div class="accordion-item">

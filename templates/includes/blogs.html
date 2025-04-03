@@ -1,51 +1,6 @@
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <svg style="width: 0; height: 0; margin: 0 0; padding: 0 0;">
-            <defs>
-                <clipPath id="carousel-control-prev">
-                    <path d="M100,0 Q80,70 60,90 S0,150 60,210 Q80,230 100,300" />
-                </clipPath>
-                <clipPath id="carousel-control-next">
-                    {% set shift = 52 %}
-                    <path d="M{{ shift }},0 Q{{ shift + 20 }},70 {{ shift + 40 }},90 S{{ shift + 100 }},150 {{ shift + 40 }},210 Q{{ shift + 20 }},230 {{ shift }},300" />
-                </clipPath>
-            </defs>
-        </svg>
-    <script>
-        function equalizeCarouselHeight() {
-            let news = document.querySelectorAll('.carousel-item');
-            console.log(news);
-            let max_height = 0;
-
-            news.forEach(item => {
-                let orig_style = item.style.display;
-                item.style.display = "block";
-                let height = item.offsetHeight;
-                console.log(max_height, height);
-                if (height > max_height) {
-                    max_height = height;
-                }
-                item.style.display = orig_style;
-            });
-            console.log(max_height);
-            news.forEach(item => {
-                item.style.height = max_height + 'px';
-            });
-        }
-        window.addEventListener("load", equalizeCarouselHeight);
-        // window.addEventListener("resize", equalizeCarouselHeight);
-    </script>
-    <script> document.getElementById("btnradio1").click(); </script>
-    <script>
-        window.addEventListener('scroll', function() {
-            let start_shift = 200;
-            if ({{ x_btn_group }} - start_shift < window.scrollY) {
-                document.getElementById('btn-group-index').style.transform = 'translateY(' + String(start_shift + window.scrollY) + 'px)';
-            }
-        });
-    </script>
-
+{#<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>#}
+{#<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>#}
+{#<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>#}
 <div class="container">
     {% for poster in posts %}
     <div class="row justify-content-center">
@@ -77,15 +32,19 @@
                                     </div>
                                 {% endfor %}
                             </div>
-                            <a class="carousel-control-prev" href="#carouselExampleControls-{{ poster.id }}" role="button" data-slide="prev" type_use="blogs">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden"></span>
-                            </a>
-
-                            <a class="carousel-control-next" href="#carouselExampleControls-{{ poster.id }}" role="button" data-slide="next" type_use="blogs">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden"></span>
-                            </a>
+                            <svg style="width: 0; height: 0; margin: 0 0; padding: 0 0;">
+                                <defs>
+                                    <clipPath id="carousel-control-prev">
+                                        <path d="M100,0 Q80,70 60,90 S0,150 60,210 Q80,230 100,300" />
+                                    </clipPath>
+                                    <clipPath id="carousel-control-next">
+                                        {% set shift = 52 %}
+                                        <path d="M{{ shift }},0 Q{{ shift + 20 }},70 {{ shift + 40 }},90 S{{ shift + 100 }},150 {{ shift + 40 }},210 Q{{ shift + 20 }},230 {{ shift }},300" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls-{{ poster.id }}" data-bs-slide="prev" type_use="blogs"><</button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls-{{ poster.id }}" data-bs-slide="next" type_use="blogs">></button>
                         </div>
                     {% endif %}
                     <p class="card-text mt-3">{{ poster.description }}</p>

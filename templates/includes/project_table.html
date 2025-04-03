@@ -1,0 +1,25 @@
+{% if projects | list | length == 0  %}
+<p>Проектов пока нет</p>
+{% else %}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Название проекта</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for project in projects %}
+            <tr>
+                <th scope="row">{{ loop.index }}</th>
+                <td><a role="button" class="btn btn-link" href="{{ url_for('project.open_project', id=project.id) }}">{{ project.title }}</a></td>
+                <td style="text-align: right;">
+                    <a role="button" class="btn btn-primary" href="{{ url_for('project.edit_project', id=project.id) }}">Редактировать</a>
+                    <a role="button" class="btn btn-secondary" href="{{ url_for('project.delete_project', id=project.id) }}">Удалить</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}

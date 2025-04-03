@@ -3,8 +3,8 @@
 {% block title %}Главная{% endblock %}
 
 {% block content %}
-
-{% include 'forms/search.html' %}
+<h1 data-theme="dark">Добро пожаловать в YL Community!</h1>
+<h2 data-theme="dark">Социальная сеть для учеников Яндекс Лицея и всех, кто связан с Яндекс Образованием.</h2>
     <div id="carouselExample" class="carousel slide" data-bs-ride="false" data-bs-interval="0" style="position: relative;">
         <div class="carousel-inner">
           {% for new_data in news_data %}
@@ -76,6 +76,8 @@
             let start_shift = 200;
             if ({{ x_btn_group }} - start_shift < window.scrollY) {
                 document.getElementById('btn-group-index').style.transform = 'translateY(' + String(start_shift + window.scrollY) + 'px)';
+            } else {
+                document.getElementById('btn-group-index').style.transform = 'translateY(' + String(x_btn_group) + 'px)';
             }
         });
     </script>
@@ -83,6 +85,7 @@
     <div id="collapseParent">
         <div class="collapse show" id="collapse1" data-bs-parent="#collapseParent">
             <h1>Лента постов</h1>
+            {% include 'forms/search.html' %}
             {% include 'includes/blogs.html' %}
         </div>
         <div class="collapse" id="collapse2" data-bs-parent="#collapseParent">
@@ -90,5 +93,4 @@
             Пусто
         </div>
     </div>
-{% include 'includes/blogs.html' %}
 {% endblock %}

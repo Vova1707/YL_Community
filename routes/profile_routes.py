@@ -88,6 +88,7 @@ def index(user_id=False):
     user = session.query(User).filter(User.id == user_id).first()
     posts = session.query(Poster).filter(Poster.user_id == user_id)
     subscribes = len(list(session.query(Subscribes_User).filter(Subscribes_User.user_id == user_id)))
+    projects = session.query(Project).filter(Project.user_id == user_id)
     user_subscribe = session.query(Subscribes_User).filter(Subscribes_User.user_id == user_id,
                                                            Subscribes_User.subscribes_user_id == int(current_user.id))
     if user_subscribe:
@@ -98,7 +99,6 @@ def index(user_id=False):
         for image in session.query(ImagePoster).filter(ImagePoster.post_id == post.id):
             images[post.id].append(image.image)
 
-    projects = session.query(Project).filter(Project.user_id == current_user.id)
     return render_template('profile/profile.html', posts=posts, projects=projects, user=user, images=images, user_subscribe=user_subscribe, subscribes=subscribes)
 
 

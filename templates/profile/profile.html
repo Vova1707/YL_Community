@@ -21,10 +21,10 @@
                     <div class="container" style="margin: 10px 0; padding: 0 0;">
                         <div class="row">
                             {% if user.image_profile %}
-                            <img src="data:image/jpeg;base64,{{ base64.b64encode(user.image_profile).decode('utf-8') }}" alt="Фото профиля" style="height: 200px; width: 200px"/>
+                            <img src="data:image/jpeg;base64,{{ base64.b64encode(user.image_profile).decode('utf-8') }}" alt="Фото профиля" style="height: 200px; width: 220px"/>
                             {% else %}
                             <img src="{{ url_for('static', filename='img/empty_profile_img.png') }}"
-                                     alt="Картинка не загрузилась" style="height: 200px; width: 200px"/>
+                                     alt="Картинка не загрузилась" style="height: 200px; width: 220px"/>
                                 {% endif %}
                             <div class="col">
                                 <div><strong>Имя:</strong> {{ user.name }}</div>
@@ -57,30 +57,9 @@
                 <div class="accordion-body">
                     {% if user.id == current_user.id %}
                     <a role="button" class="btn btn-primary mb-3" href="{{ url_for('project.create_project') }}">Создать проект</a>
-                        <p>Создайте свой первый проект</p>
-                    {% else %}
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Название проекта</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for project in projects %}
-                                    <tr>
-                                        <th scope="row">{{ loop.index }}</th>
-                                        <td><a role="button" class="btn btn-link" href="{{ url_for('project.open_project', id=project.id) }}">{{ project.title }}</a></td>
-                                        <td style="text-align: right;">
-                                            <a role="button" class="btn btn-primary" href="{{ url_for('project.edit_project', id=project.id) }}">Редактировать</a>
-                                            <a role="button" class="btn btn-secondary" href="{{ url_for('project.delete_project', id=project.id) }}">Удалить</a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                    {#{% else %}#}
                     {% endif %}
+                    {% include 'includes/project_table.html' %}
                 </div>
             </div>
         </div>

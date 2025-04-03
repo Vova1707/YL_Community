@@ -160,6 +160,12 @@
 {#                        });#}
 {#                    </script>#}
                     <script>
+                      document.addEventListener("DOMContentLoaded", function () {
+                        let tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+                        tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
+                      });
+                    </script>
+                    <script>
                         const theme_button = document.getElementById('theme-button');
 
                         window.addEventListener('DOMContentLoaded', () => {
@@ -177,12 +183,12 @@
 
                         function update_theme(theme) {
                             console.log(theme)
-                            for (const name_class of ['text-primary', 'text-secondary', 'div-code-editor', 'list-group-item', 'carousel-control-prev', 'carousel-control-next', 'btn-check', 'btn-check-text']) {
+                            for (const name_class of ['text-primary', 'text-secondary', 'text-danger', 'tooltip-inner', 'div-code-editor', 'list-group-item', 'carousel-control-prev', 'carousel-control-next', 'btn-check', 'btn-check-text']) {
                                 for (const el of document.getElementsByClassName(name_class)) {
                                     el.setAttribute('data-theme', theme);
                                 }
                             }
-                            for (const name_tag of ['h1']) {
+                            for (const name_tag of ['h1', 'h2']) {
                                 for (const el of document.getElementsByTagName(name_tag)) {
                                     el.setAttribute('data-theme', theme);
                                 }

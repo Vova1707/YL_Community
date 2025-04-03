@@ -1,0 +1,27 @@
+<div class="accordion-body m-0" data-theme="dark" style="position: relative">
+  {% if file_tree %}
+      <ul class="div-code-editor list-group">
+        {% macro render_tree(tree, parent_id='root') %}
+            {% for node in tree %}
+                <li class="list-group-item" id="code-editor" data-theme="dark" style="border: none; box-shadow: none;">
+                    {% if node.type == 'folder' %}
+                        <button style="white-space: nowrap;" class="btn btn-primary p-0 m-0" id="dop" data-bs-toggle="collapse" data-bs-target="#collapse-{{ parent_id }}-{{ loop.index }}"> <!-- Кнопка для раскрытия вложенной папки -->
+                            📁{{ node.name }}
+                        </button>
+                        <div id="collapse-{{ parent_id }}-{{ loop.index }}" class="collapse p-0 m-0"> <!-- Контейнер для вложенных элементов -->
+                            <ul class="list-group p-0 m-0">
+                                {{ render_tree(node.children, parent_id ~ '-' ~ loop.index) }}
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a style="white-space: nowrap;" class="btn btn-primary p-0 m-0" id="dop" href="{{ url_for("project.open_file", id_project=id, path=node.path) }}">
+                            📄{{ node.name }}
+                        </a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        {% endmacro %}
+        {{ render_tree(file_tree) }}
+      </ul>
+  {% endif %}
+</div>

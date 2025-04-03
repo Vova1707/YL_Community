@@ -8,6 +8,7 @@
     --dop2second-color: #ffdbd5;
     --midsecond-color: #f8735b;
     --darksecond-color: #481a11;
+    --light-color: #d3d3d3;
     --dark-color: #b2b2b2;
     --dopdark-color: #818181;
 
@@ -15,6 +16,7 @@
     --bg-light-color: rgb(254, 255, 254);
     --bg-dark-blur-color: rgba(154, 158, 164, 0.3);
     --bg-light-blur-color: rgba(254, 255, 254, 0.3);
+    --bg-black-blur-color: rgb(75, 71, 71, 0.5);
 
     --bg-code-editor-dark:  rgb(33, 37, 41, 0);
     --bg-code-editor-mid:  rgb(33, 37, 41, 0.8);
@@ -187,16 +189,33 @@ img.wallpaper_img {
     color: var(--dopmain-color) !important;
     border-color: rgba(0, 0, 0, 0) !important;
 }
+.btn-success:hover {
+    background-color: var(--dopmain-color) !important;
+    color: var(--main-color) !important;
+    border-color: rgba(0, 0, 0, 0) !important;
+}
 .btn-danger {
     background-color: var(--second-color) !important;
     color: var(--dopsecond-color) !important;
     border-color: rgba(0, 0, 0, 0) !important;
 }
+.btn-danger:hover {
+    background-color: var(--dopsecond-color) !important;
+    color:  var(--second-color)  !important;
+    border-color: rgba(0, 0, 0, 0) !important;
+}
+.btn-info {
+    background-color: var(--dopdark-color) !important;
+    color: var(--light-color) !important;
+    border-color: rgba(0, 0, 0, 0) !important;
+}
+.btn-info:hover {
+    background-color: var(--light-color) !important;
+    color:  var(--dopdark-color)  !important;
+    border-color: rgba(0, 0, 0, 0) !important;
+}
 .btn-link {
     color: var(--dopdark-color) !important;
-}
-.btn-link:hover {
-    color: var(--dopsecond-color) !important;
 }
 .nav-link:hover {
     color: var(--dopsecond-color) !important;
@@ -211,11 +230,11 @@ img.wallpaper_img {
     color: var(--main-color) !important;
     border-color: rgba(0, 0, 0, 0) !important;
 }
-.text-secondary[data-theme="dark"] {
+.text-secondary[data-theme="dark"], .text-danger[data-theme="dark"] {
     color: var(--dopsecond-color) !important;
     border-color: rgba(0, 0, 0, 0) !important;
 }
-.text-secondary[data-theme="light"] {
+.text-secondary[data-theme="light"], .text-danger[data-theme="dark"] {
     color: var(--second-color) !important;
     border-color: rgba(0, 0, 0, 0) !important;
 }
@@ -256,31 +275,25 @@ h2[data-theme="light"] {
     outline: none;
 }
 
-
 .container-resizer {
 display: flex;
 user-select: none;
 }
-
 .box {
 overflow: hidden;
 }
-
 .box1 {
 width: 25%;
 }
-
 .box2 {
 width: 75%;
 }
-
 .resizer {
 width: 5px;
 cursor: ew-resize;
 background-color: var(--main-color);
 transition: background-color 0.2s;
 }
-
 .resizer:hover {
 background-color: var(--dopmain-color);
 }
@@ -387,4 +400,21 @@ input[type="radio"]:not(:checked)[data-theme="light"] + label:hover[data-theme="
 .dislike-like button, .like-dislike button {
     width: 40px; /* Или другое желаемое значение */
     padding: 0; /* Уберите padding, чтобы кнопки были меньше */
+}
+
+
+.tooltip, .tooltip.show  {
+    z-index: 9999 !important; opacity: 1;
+
+    border-radius: 10px !important;
+    border: 1px solid var(--main-color);
+    box-shadow: 0 0 20px var(--main-color);
+}
+.tooltip-inner {
+    white-space: nowrap !important;
+    max-width: none !important;
+    color: var(--lightmain-color) !important;
+    background: var(--bg-black-blur-color) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
