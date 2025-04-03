@@ -15,19 +15,32 @@
             <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
                  aria-labelledby="panelsStayOpen-headingOne">
                 <div class="accordion-body">
+                    {% if user.id == current_user.id %}
                     <a role="button" class="btn btn-primary" href="{{ url_for('profile.edit_profile') }}">Редактировать</a>
+                    {% endif %}
                     <div class="container" style="margin: 10px 0; padding: 0 0;">
                         <div class="row">
                             {% if user.image_profile %}
-                            <img src="data:image/jpeg;base64,{{ base64.b64encode(current_user.image_profile).decode('utf-8') }}" alt="Фото профиля" style="height: 200px; width: 200px"/>
+                            <img src="data:image/jpeg;base64,{{ base64.b64encode(user.image_profile).decode('utf-8') }}" alt="Фото профиля" style="height: 200px; width: 200px"/>
                             {% else %}
                             <img src="{{ url_for('static', filename='img/empty_profile_img.png') }}"
                                      alt="Картинка не загрузилась" style="height: 200px; width: 200px"/>
                                 {% endif %}
                             <div class="col">
-                                <div><strong>Имя:</strong> {{ current_user.username }}</div>
-                                <div><strong>Почта:</strong> {{ current_user.email }}</div>
-                                <div><strong>Описание:</strong> {{ current_user.about }}</div>
+                                <div><strong>Имя:</strong> {{ user.name }}</div>
+                                <div><strong>Почта:</strong> {{ user.email }}</div>
+                                <div><strong>Описание:</strong> {{ user.about }}</div>
+                                <a role="button" class="btn btn-primary" href="{{ url_for('profile.subscribes', user_id=user.id) }}"><div><strong>Подписок:</strong> {{ subscribes }}</div></a>
+                                {% if  user.id == current_user.id %}
+                                <a role="button" class="btn btn-primary" href="{{ url_for('blog.create_blog_post') }}">Новая запись</a>
+                                {% else %}
+                                {% if user_subscribe %}
+                                <a role="button" class="btn btn-primary" href="{{ url_for('profile.delete_subscribes_user', user_id=user.id, subscribes_user_id=current_user.id) }}">Отписаться</a>
+                                {% else %}
+                                <a role="button" class="btn btn-primary" href="{{ url_for('profile.add_subscribes_user', user_id=user.id, subscribes_user_id=current_user.id) }}">Подписаться</a>
+
+                                {% endif %}
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -42,8 +55,8 @@
             </h2>
             <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
                 <div class="accordion-body">
+                    {% if user.id == current_user.id %}
                     <a role="button" class="btn btn-primary mb-3" href="{{ url_for('project.create_project') }}">Создать проект</a>
-                    {% if len_projects == 0 %}
                         <p>Создайте свой первый проект</p>
                     {% else %}
                         <table class="table">
@@ -73,8 +86,11 @@
         </div>
     </div>
     <div class="row">
+        {% if  user.id == current_user.id %}
         <div class="col"><h1>Ваши посты</h1></div>
+        {% else %}
+        <div class="col"><h1>Посты</h1></div>
+        {% endif %}
         {% include 'includes/blogs.html' %}
-        <div class="col" style="text-align: right;"><a role="button" class="btn btn-primary" href="{{ url_for('blog.create_blog_post') }}">Новая запись</a></div>
     </div>
 {% endblock %}

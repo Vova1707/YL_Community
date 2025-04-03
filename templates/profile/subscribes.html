@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Подписчики{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Подписчики</h2>
+    <div class="row justify-content-center">
+        {% for user in users %}
+        <div class="col-md-8">
+            <div class="card mb-4" style="min-height: 120px;">
+                <div class="card-header">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            {% if user.image_profile %}
+                                <img src="data:image/jpeg;base64,{{ base64.b64encode(user.image_profile).decode('utf-8') }}" class="rounded-circle mr-3"
+                                     style="width: 40px; height: 40px; object-fit: cover;" alt="Аватарка">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='img/empty_profile_img.png') }}" class="rounded-circle mr-3"
+                                     style="width: 40px; height: 40px; object-fit: cover;" alt="Аватарка">
+                            {% endif %}
+                            <span><a href="{{ url_for('profile.index', user_id=user.id) }}">{{ user.name }}</a></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div><strong>Почта:</strong> {{ user.email }}</div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

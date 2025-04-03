@@ -21,11 +21,12 @@ class User(SqlAlchemyBase, UserMixin):
     password_hash = Column(String(128), nullable=False)
 
     # Связи с другими моделями
-    posters = relationship("Poster", back_populates="user")
+    posters = relationship( "Poster", back_populates="user")
     comments = relationship("CommentPoster", back_populates="user")
     projects = relationship("Project", back_populates="user")
     programs = relationship("Program", back_populates="user")
     like = relationship("LikePoster", back_populates="user")
+    subscribes_user = relationship("Subscribes_User", back_populates="user")
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

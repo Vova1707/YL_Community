@@ -11,7 +11,7 @@ from models.projects import Project
 from models.users import User
 from werkzeug.security import check_password_hash, generate_password_hash
 from forms.profile import Profile_edit_form
-from models.blog import ImagePoster
+from models.blog import ImagePoster, Subscribes_User
 
 
 profile_bp = Blueprint('profile', __name__, url_prefix='/profile')
@@ -79,11 +79,19 @@ def logout():
 
 @profile_bp.route('/')
 @profile_bp.route('/index')
-def index():
-    flash('Вы вошли в свой профиль.', 'info')
+@profile_bp.route('/other_profile/<int:user_id>')
+def index(user_id=False):
     session = create_session()
-    user = session.query(User).filter(User.id == current_user.id).first()
-    posts = session.query(Poster).filter(Poster.user_id == current_user.id)
+    if not user_id or user_id == current_user.id:
+        user_id = current_user.id
+        flash('Вы вошли в свой профиль.', 'info')
+    user = session.query(User).filter(User.id == user_id).first()
+    posts = session.query(Poster).filter(Poster.user_id == user_id)
+    subscribes = len(list(session.query(Subscribes_User).filter(Subscribes_User.user_id == user_id)))
+    user_subscribe = session.query(Subscribes_User).filter(Subscribes_User.user_id == user_id,
+                                                           Subscribes_User.subscribes_user_id == int(current_user.id))
+    if user_subscribe:
+        user_subscribe = user_subscribe.first()
     images = {}
     for post in posts:
         images[post.id] = []
@@ -91,7 +99,7 @@ def index():
             images[post.id].append(image.image)
 
     projects = session.query(Project).filter(Project.user_id == current_user.id)
-    return render_template('profile/profile.html', posts=posts, projects=projects, user=user, images=images)
+    return render_template('profile/profile.html', posts=posts, projects=projects, user=user, images=images, user_subscribe=user_subscribe, subscribes=subscribes)
 
 
 @profile_bp.route('/edit_profile')
@@ -137,6 +145,36 @@ def edit_profile():
             form.about.data = user.about
             form.email.data = user.email
         return render_template('profile/profile_edit.html', form=form)
+
+
+@profile_bp.route('/add_subscribes_user/<int:user_id>/<int:subscribes_user_id>')
+def add_subscribes_user(user_id, subscribes_user_id):
+    session = create_session()
+    subscribes_user = Subscribes_User(subscribes_user_id=subscribes_user_id, user_id=user_id)
+    session.add(subscribes_user)
+    session.commit()
+    return redirect(request.referrer)
+
+
+@profile_bp.route('/subscribes/<int:user_id>')
+def subscribes(user_id):
+    session = create_session()
+    subscribes = session.query(Subscribes_User).filter(Subscribes_User.user_id == user_id)
+    users = []
+    for subscribe in subscribes:
+        users.append(session.query(User).filter(User.id == subscribe.subscribes_user_id).first())
+        print(users)
+    return render_template('profile/subscribes.html', users=users)
+
+
+
+@profile_bp.route('/delete_subscribes_user/<int:user_id>/<int:subscribes_user_id>')
+def delete_subscribes_user(user_id, subscribes_user_id):
+    session = create_session()
+    subscribes_user = session.query(Subscribes_User).filter(Subscribes_User.subscribes_user_id == subscribes_user_id, Subscribes_User.user_id==user_id).first()
+    session.delete(subscribes_user)
+    session.commit()
+    return redirect(request.referrer)
 
 
 def load_photo(image_profile):

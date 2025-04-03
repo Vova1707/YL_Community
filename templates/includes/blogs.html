@@ -61,7 +61,7 @@
                                 <img src="" class="rounded-circle mr-3"
                                      style="width: 40px; height: 40px; object-fit: cover;" alt="Аватарка">
                             {% endif %}
-                            <span>{{ poster.user.name }}</span>
+                            <span><a href="{{ url_for('profile.index', user_id=poster.user.id) }}">{{ poster.user.name }}</a></span>
                         </div>
                     </div>
                 </div>

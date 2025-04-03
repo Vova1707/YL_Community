@@ -54,3 +54,12 @@ class LikePoster(SqlAlchemyBase):
 
     post = relationship("Poster", back_populates="like")
     user = relationship("User", back_populates="like")
+
+class Subscribes_User(SqlAlchemyBase):
+    __tablename__ = 'subscribes_user'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    subscribes_user_id = Column(Integer)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+
+    user = relationship("User", back_populates="subscribes_user")
