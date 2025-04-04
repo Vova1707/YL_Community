@@ -57,7 +57,6 @@
                 <div class="accordion-body">
                     {% if user.id == current_user.id %}
                     <a role="button" class="btn btn-primary mb-3" href="{{ url_for('project.create_project') }}">Создать проект</a>
-                    {#{% else %}#}
                     {% endif %}
                     {% include 'includes/project_table.html' %}
                 </div>

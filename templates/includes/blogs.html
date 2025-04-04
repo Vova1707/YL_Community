@@ -27,7 +27,7 @@
                                 {% for image in images[poster.id] %}
                                     <div class="carousel-item {% if loop.first %}active{% endif %}">
                                         <img src="data:image/jpeg;base64,{{ base64.b64encode(image).decode('utf-8') }}"
-                                             class="d-block w-100" style="height: 400px; width:auto max_width: 500; object-fit: cover;"
+                                             class="d-block w-100" style="height: 400px; width:auto max_width: 500; object-fit: contain;"
                                              alt="Изображение">
                                     </div>
                                 {% endfor %}

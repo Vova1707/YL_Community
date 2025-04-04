@@ -3,63 +3,163 @@
 {% block title %}{{ poster.title }}{% endblock %}
 
 {% block content %}
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/poster_detail.css') }}">
-
-<div class="card-body">
-                    {% if images|length > 0 %}
-                        <div id="carouselExampleControls-{{ poster.id }}" class="carousel slide" data-ride="carousel">
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                {% if poster.user.image_profile %}
+                    <img src="data:image/jpeg;base64,{{ base64.b64encode(poster.user.image_profile).decode('utf-8') }}"
+                         class="rounded-circle me-3" style="width: 40px; height: 40px; object-fit: cover;"
+                         alt="Аватарка">
+                {% else %}
+                    <img src="{{ url_for('static', filename='img/empty_profile_img.png') }}" class="rounded-circle me-3" style="width: 40px; height: 40px; object-fit: cover;"
+                         alt="Аватарка">
+                {% endif %}
+                <span><a href="{{ url_for('profile.index', user_id=poster.user.id) }}">{{ poster.user.name }}</a></span>
+            </div>
+            <div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <h1>Изображения</h1>
+        {% if images|length > 0 %}
+                        <div id="carouselExampleControls-{{ poster.id }}" class="carousel slide" data-bs-ride="false" data-bs-interval="0">
                             <div class="carousel-inner">
                                 {% for image in images %}
                                     <div class="carousel-item {% if loop.first %}active{% endif %}">
                                         <img src="data:image/jpeg;base64,{{ base64.b64encode(image).decode('utf-8') }}"
-                                             class="d-block w-100" style="height: 400px; width:auto; max_width: 500; object-fit: cover;"
+                                             class="d-block w-100" style="height: 400px; width:auto max_width: 500; object-fit: contain;"
                                              alt="Изображение">
                                     </div>
                                 {% endfor %}
                             </div>
-                            <a class="carousel-control-prev" href="#carouselExampleControls-{{ poster.id }}" role="button" data-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only"></span>
-                            </a>
-                            <a class="carousel-control-next" href="#carouselExampleControls-{{ poster.id }}" role="button" data-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only"></span>
-                            </a>
+                            <svg style="width: 0; height: 0; margin: 0 0; padding: 0 0;">
+                                <defs>
+                                    <clipPath id="carousel-control-prev">
+                                        <path d="M100,0 Q80,70 60,90 S0,150 60,210 Q80,230 100,300" />
+                                    </clipPath>
+                                    <clipPath id="carousel-control-next">
+                                        {% set shift = 52 %}
+                                        <path d="M{{ shift }},0 Q{{ shift + 20 }},70 {{ shift + 40 }},90 S{{ shift + 100 }},150 {{ shift + 40 }},210 Q{{ shift + 20 }},230 {{ shift }},300" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls-{{ poster.id }}" data-bs-slide="prev" type_use="blogs"><</button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls-{{ poster.id }}" data-bs-slide="next" type_use="blogs">></button>
                         </div>
-                    {% endif %}
-<p>{{ poster.description }}</p>
+        {% endif %}
+        <p>{{ poster.description }}</p>
+        <div class="d-flex justify-content-start align-items-center mt-3">
+                        <div class="mr-3">
+                            <form class="like-form" method="POST" action="{{ url_for('blog.like_poster', post_id=poster.id) }}">
+                                <button class='like btn btn-success btn-sm' type="submit" {% if has_liked %}disabled{% endif %}>
+                                    <img src="{{ url_for('static', filename='img/like.png') }}" alt="Лайк" style="height: 20px; width: 25px; border: none; background: none; padding: 0; outline: none;">
+                                    <span class="like-count">{{ poster.likes }}</span>
+                                </button>
+                            </form>
+                        </div>
+                        <div>
+                            <form class="dislike-form" method="POST" action="{{ url_for('blog.dislike_poster', post_id=poster.id) }}">
+                                <button class='dislike btn btn-danger btn-sm' type="submit" {% if has_disliked %}disabled{% endif %}>
+                                    <img src="{{ url_for('static', filename='img/dislike.png') }}" style="height: 20px; width: 20px border: none; background: none; padding: 0; outline: none;" alt="Дизлайк">
+                                    <span class="dislike-count">{{ poster.dislikes }}</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+    </div>
 
-<p>Теги: {{ poster.tags }}</p>
-<p>Категория: {{ poster.category }}</p>
+        <p>Теги: {{ poster.tags }}</p>
+        <p>Категория: {{ poster.category }}</p>
 
 
-<div class="comments">
-    <h2>Комментарии:</h2>
-    {% if comments %}
-        {% for comment in comments %}
-            <div class="comment">
-                <div class="comment-body">
-                    {{ current_user.name }}: {{ comment.text }}
+        <div class="comments">
+            <h2>Комментарии:</h2>
+            {% if comments %}
+                {% for comment in comments %}
+                    <div class="comment">
+                        <div class="comment-body">
+                            {{ current_user.name }}: {{ comment.text }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Пока нет комментариев.</p>
+            {% endif %}
+
+            <h3>Оставить комментарий:</h3>
+            <form method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.text.label(class="form-label") }}
+                    {{ form.text(class="form-control") }}
                 </div>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>Пока нет комментариев.</p>
-    {% endif %}
-
-    <h3>Оставить комментарий:</h3>
-    <form method="POST" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-            {{ form.text.label }}
-            {{ form.text(class="form-control") }}
+                <button type="submit" class="btn btn-primary">Отправить</button>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary">Отправить</button>
-    </form>
-</div>
 
-<a role="button" class="btn btn-primary btn-sm mr-2" href="{{ url_for('profile.index') }}">Вернуться на главную</a>
+        <a role="button" class="btn btn-primary btn-sm me-2" href="{{ url_for('profile.index') }}">Вернуться на
+            главную</a>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    function handleReaction(formClass, countClass, buttonClass, dataKey) {
+        const forms = document.querySelectorAll(`.${formClass}`);
+
+        forms.forEach(form => {
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const url = form.action;
+                const method = form.method;
+                const countElement = form.parentNode.querySelector(`.${countClass}`);
+                const button = form.querySelector(`.${buttonClass}`);
+
+                try {
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        countElement.textContent = data[dataKey];
+                        button.disabled = true;
+
+                        // Обновляем стили элементов на странице
+                        updateReactions(data);
+
+                    } else {
+                        console.error('Ошибка при отправке запроса:', response.status);
+                    }
+                } catch (error) {
+                    console.error('Произошла ошибка:', error);
+                }
+            });
+        });
+    }
+
+    function updateReactions(data) {
+        const likeCountElements = document.querySelectorAll('.like-count');
+        likeCountElements.forEach(el => el.textContent = data.likes);
+
+        const dislikeCountElements = document.querySelectorAll('.dislike-count');
+        dislikeCountElements.forEach(el => el.textContent = data.dislikes);
+
+        const likeButtons = document.querySelectorAll('.like');
+        likeButtons.forEach(button => button.disabled = data.user_liked);
+
+        const dislikeButtons = document.querySelectorAll('.dislike');
+        dislikeButtons.forEach(button => button.disabled = data.user_disliked);
+    }
+
+    handleReaction('like-form', 'like-count', 'like', 'likes');
+    handleReaction('dislike-form', 'dislike-count', 'dislike', 'dislikes');
+});
+</script>
 {% endblock %}
