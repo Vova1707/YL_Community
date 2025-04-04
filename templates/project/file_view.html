@@ -32,10 +32,14 @@
         </div>
         <div class="resizer"></div>
         <div class="box box2">
-            {% if file_data == None %}
+            {% if file_type == None %}
                 <p class="text-danger m-3">Файл невозможно открыть :(</p>
+            {% elif file_type == "img" %} <!-- d-block w-100 -->
+                <img src="data:image/jpeg;base64,{{ base64.b64encode(file_data).decode('utf-8') }}"
+                                             class="img-fluid" style="margin: 10px; height: 300px; width: auto; object-fit: cover;"
+                                             alt="Изображение">
             {% else %}
-            <div class="div-code-editor m-0" data-theme="dark"><textarea class="CodeMirror" id="editor">{{ file_data }}</textarea></div>
+                <div class="div-code-editor m-0" data-theme="dark"><textarea class="CodeMirror" id="editor">{{ file_data }}</textarea></div>
             {% endif %}
             <script>
                 var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {

@@ -406,9 +406,11 @@ input[type="radio"]:not(:checked)[data-theme="light"] + label:hover[data-theme="
 .tooltip, .tooltip.show  {
     z-index: 9999 !important; opacity: 1;
 
-    border-radius: 10px !important;
-    border: 1px solid var(--main-color);
-    box-shadow: 0 0 20px var(--main-color);
+    border-radius: 5px !important;
+    border: 1px solid var(--second-color);
+    box-shadow: 0 0 10px var(--second-color);
+
+    margin-left: -200px !important;
 }
 .tooltip-inner {
     white-space: nowrap !important;
@@ -417,4 +419,7 @@ input[type="radio"]:not(:checked)[data-theme="light"] + label:hover[data-theme="
     background: var(--bg-black-blur-color) !important;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+}
+.tooltip .tooltip-arrow::before {
+  border-top-color: var(--second-color) !important;
 }

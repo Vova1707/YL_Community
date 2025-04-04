@@ -1,4 +1,5 @@
 import os
+import base64
 
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
@@ -14,7 +15,7 @@ from models.projects import Project
 
 from forms.projects import Project_create_form
 
-SYMBOL_PATH = ","
+SYMBOL_PATH = "|"
 
 project_bp = Blueprint('project', __name__, url_prefix='/project')
 
@@ -181,15 +182,21 @@ def open_file(id_project, path):
         return redirect(url_for('profile.index'))
 
     path = path.replace(SYMBOL_PATH, '/')
+
     with ZipFile(BytesIO(project.file)) as zip_file:
         with zip_file.open(path, 'r') as file:
-            try:
-                file_data = file.read().decode("utf-8")
-            except UnicodeDecodeError:
-                file_data = None
+            file_data = file.read() # base64.b64encode(file.read()).decode('utf-8')
+            if path.split(".")[-1] in ["png", "jpg", "jpeg", "bmp", "gif", "tif", "tiff", "webp", "heic", "heif", "ico", "dds", "raw", "exr", "svg", "eps", "ai"]:
+                file_type = "img"
+            else:
+                try:
+                    file_data = file.read().decode("utf-8")
+                    file_type = "code"
+                except UnicodeDecodeError:
+                    file_type = None
     return render_template('project/file_view.html',
                            name_project=project.title, file_tree=pickle.loads(project.file_tree), id=id_project,
-                           path=path.replace('/', SYMBOL_PATH), orig_path=path, file_data=file_data)
+                           path=path.replace('/', SYMBOL_PATH), orig_path=path, file_data=file_data, file_type=file_type)
 
 @project_bp.route('<int:id_project>/file/delete/<string:path>')
 @login_required
