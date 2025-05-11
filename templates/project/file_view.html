@@ -3,6 +3,27 @@
 {% block title %}Файл {{ orig_path }}{% endblock %}
 
 {% block content %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/code_editor.css') }}">
+
+{#    {% set code_langs = ['python', 'xml', 'javascript', 'css', 'htmlmixed'] %}#}
+{#    {% for code_lang in code_langs %}#}
+{#        <script>console.log("https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/{{ code_langs }}/{{ code_langs }}.min.js");</script>#}
+{#        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/{{ code_langs }}/{{ code_langs }}.min.js"></script>#}
+{#    {% endfor %}#}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/theme/monokai.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/theme/dracula.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/theme/material.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/theme/tomorrow-night-bright.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/theme/eclipse.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/theme/idea.min.css">
+
     <h1>{{ name_project }}</h1>
 
     <div class="row m-1"> <!-- style="margin: 0 0; padding: 0 0;" -->
@@ -21,63 +42,77 @@
 {#            <form onsubmit="save_code(event)">#}
 {#                <button type="submit">Изменить файл</button>#}
 {#            </form>#}
-            <a role="button" class="btn btn-secondary" href="{{ url_for('project.delete_file', id_project=id, path=path) }}">Удалить файл</a>
+            <!-- <a role="button" class="btn btn-primary" href="{{ url_for('project.rename_file', id_project=id, path=path) }}">Переименовать</a> -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-rename-file">Переименовать</button>
+            {% include 'modal_windows/rename_file.html' %}
             <button class="btn btn-primary" onclick="save_code()">Сохранить файл</button>
+            <a role="button" class="btn btn-secondary" href="{{ url_for('project.delete_file', id_project=id, path=path) }}">Удалить файл</a>
         </div>
     </div>
 
-    <div class="container container-resizer m-0 p-0">
-        <div class="box box1">
+    <div class="container resizer-container" style="margin: 0; padding: 0; border-bottom: 5px solid var(--main-color); margin-bottom: 5px;">
+        <div class="resizer-box resizer-box1" style="margin: 0; padding: 0">
             {% include 'includes/tree_archive.html' %}
         </div>
-        <div class="resizer"></div>
-        <div class="box box2">
-            {% if file_type == None %}
-                <p class="text-danger m-3">Файл невозможно открыть :(</p>
-            {% elif file_type == "img" %} <!-- d-block w-100 -->
-                <img src="data:image/jpeg;base64,{{ base64.b64encode(file_data).decode('utf-8') }}"
-                                             class="img-fluid" style="margin: 10px; height: 300px; width: auto; object-fit: cover;"
-                                             alt="Изображение">
-            {% else %}
+        <div class="resizer-delimiter"></div>
+        <div class="resizer-box resizer-box2">
+            {% if file_type == "code" %}
                 <div class="div-code-editor m-0" data-theme="dark"><textarea class="CodeMirror" id="editor">{{ file_data }}</textarea></div>
-            {% endif %}
-            <script>
+                {% set languages = {"py": "python", "xml": "xml", "js":"javascript", "css":"css", "html":"htmlmixed"} %}
+                {% set file_extension = name_file.split('.')[-1] %}
+                {% if file_extension in languages.keys() %}{% set languages = languages[file_extension] %}{% else %}{% set languages = "python" %}{% endif %}
+                <script>
                 var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
-                    mode: "python",
+                    mode: "{{ languages }}", // python htmlmixed css
                     theme: "yltheme",  // yltheme || monokai | dracula | material | tomorrow-night-bright || default | eclipse | idea
                     lineNumbers: true,
-                    //indentUnit: 4,
-                    //tabSize: 4,
-                    //matchBrackets: true
+                    indentUnit: 4,
+                    tabSize: 4,
+                    matchBrackets: true,
                 });
                 function save_code() {
                     let data = editor.getValue(); // event.preventDefault();
                     let encode_data = encodeURIComponent(data);
                     window.location.href = "http://127.0.0.1:8086/project/{{ id }}/file/save/{{ path }}?new_data=" + encode_data;
                 }
-                /* let previousLines = 1    ;
-                document.getElementById("editor").addEventListener("input", function () {
-                    let currentLines = editor.value.split("\n").length;
-                    if (currentLines > previousLines) {
-                        //this.style.height = this.value.split("\n").length * 21 + "px";
-                        console.log("Пользователь добавил строку");
-                    } else if (currentLines < previousLines) {
-                        editor.style.height = editor.value.split("\n").length * 21 + "px"; // this.value.split("\n").length * 21 + "px";
-                        console.log("Пользователь удалил строку");
-                    }
-                    previousLines = currentLines;
-                    editor.style.height = editor.scrollHeight + "px";
-                }); */
-            </script>
+                </script>
+            {% elif file_type == "img" %}
+                <img src="data:image/jpeg;base64,{{ base64.b64encode(file_data).decode('utf-8') }}"
+                                             class="img-fluid" style="margin: 10px; height: 300px; width: auto; object-fit: cover;"
+                                             alt="Изображение">
+            {% elif file_type == "csv" %}
+                <table class="table">
+                    <thead> <tr>
+                    {% for row_head in file_data[1][0] %}
+                        <th scope="col">{{ row_head }}</th>
+                    {% endfor %}
+                    </tr> </thead>
+                    <tbody>
+                    {% for row_body in file_data[1][1:] %}
+                    <tr>
+                        {% for cell_body in row_body %}
+                        {% if loop.index == 0 %}
+                        <th scope="col">{{ cell_body }}</th>
+                        {% else %}
+                        <td>{{ cell_body }}</td>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-danger m-3">Файл невозможно открыть :(</p>
+            {% endif %}
         </div>
     </div>
     <script>
-      const resizer = document.querySelector('.resizer');
-      const box1 = document.querySelector('.box1');
-      const box2 = document.querySelector('.box2');
+      const resizerDelimiter = document.querySelector('.resizer-delimiter');
+      const resizerBox1 = document.querySelector('.resizer-box1');
+      const resizerBox2 = document.querySelector('.resizer-box2');
       let isResizing = false;
 
-      resizer.addEventListener('mousedown', (event) => {
+      resizerDelimiter.addEventListener('mousedown', (event) => {
         isResizing = true;
         document.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseup', () => isResizing = false, { once: true });
@@ -86,46 +121,93 @@
       function handleMouseMove(event) {
         if (!isResizing) return;
 
-        const containerWidth = resizer.parentElement.offsetWidth;
-        let newBox1Width = event.clientX - resizer.parentElement.offsetLeft;
+        const containerWidth = resizerDelimiter.parentElement.offsetWidth;
+        let newBox1Width = event.clientX - resizerDelimiter.parentElement.offsetLeft;
 
-        // Ограничения по минимальной ширине
-        const minWidth = 200;
+        const minWidth = 0;
         const maxWidth = containerWidth - minWidth;
 
         if (newBox1Width < minWidth) newBox1Width = minWidth;
         if (newBox1Width > maxWidth) newBox1Width = maxWidth;
 
-        box1.style.width = newBox1Width + 'px';
-        box2.style.width = (containerWidth - newBox1Width - resizer.offsetWidth) + 'px';
+        resizerBox1.style.width = newBox1Width + 'px';
+        resizerBox2.style.width = (containerWidth - newBox1Width - resizerDelimiter.offsetWidth) + 'px';
       }
     </script>
-    <select id="font-editor-select" class="form-select m-1 p-1 w-auto">
-        <option value="yltheme">встроенная тема</option>
-        <option value="monokai">monokai</option>
-        <option value="dracula">dracula</option>
-        <option value="material">material</option>
-        <option value="tomorrow-night-bright">tomorrow-night-bright</option>
-        <option value="default">default</option>
-        <option value="eclipse">eclipse</option>
-        <option value="idea">idea</option>
-    </select>
-    <script>
-        const font_editor = document.getElementById('font-editor-select');
 
-        const saved_font_editor = localStorage.getItem('FontEditorSelected');
-        if (saved_font_editor) {
-            console.log(saved_font_editor);
-            editor.setOption("theme", saved_font_editor);
-            font_editor.value = saved_font_editor;
-        }
+    <div style="display: flex">
+    {% if file_type == "code" %}
+    <div class="col-auto" style="padding-right: 5px;">
+        <select id="font-editor-select" class="form-select w-auto">
+            <option value="yltheme">встроенная тема</option>
+            <option value="monokai">monokai</option>
+            <option value="dracula">dracula</option>
+            <option value="material">material</option>
+            <option value="tomorrow-night-bright">tomorrow-night-bright</option>
+            <option value="default">default</option>
+            <option value="eclipse">eclipse</option>
+            <option value="idea">idea</option>
+        </select>
+        <script>
+            const font_editor = document.getElementById('font-editor-select');
 
-        font_editor.addEventListener('change', function() {
-            const FontEditorSelected = this.value;
-            editor.setOption("theme", FontEditorSelected);
-            // CodeMirror(document.getElementById("editor")).setOption("theme", font_editor_selected);
+            const saved_font_editor = localStorage.getItem('FontEditorSelected');
+            if (saved_font_editor) {
+                editor.setOption("theme", saved_font_editor);
+                font_editor.value = saved_font_editor;
+            }
 
-            localStorage.setItem('FontEditorSelected', FontEditorSelected);
-        });
-    </script>
+            font_editor.addEventListener('change', function() {
+                const FontEditorSelected = this.value;
+                editor.setOption("theme", FontEditorSelected);
+                // CodeMirror(document.getElementById("editor")).setOption("theme", font_editor_selected);
+
+                localStorage.setItem('FontEditorSelected', FontEditorSelected);
+            });
+        </script>
+    </div>
+
+    <div class="col">
+        <input type="number" class="form-control text-center w-auto" min="5" max="30" id="inp-code-fontsize">
+        <script>
+            const InpCodeFontSize = document.getElementById("inp-code-fontsize");
+            const CodeMirrorCode = document.getElementsByClassName("CodeMirror-code")[0];
+
+            if (localStorage.getItem('InpCodeFontSize')) {
+                const InpCodeFontSizeValue = localStorage.getItem('InpCodeFontSize');
+                InpCodeFontSize.value = InpCodeFontSizeValue;
+                // CodeMirrorCode.style.fontSize = String(InpCodeFontSizeValue) + "px"
+                editor.getWrapperElement().style.fontSize = String(InpCodeFontSizeValue) + "px"
+                editor.refresh();
+            }
+            document.getElementById("inp-code-fontsize").addEventListener('input', function() {
+                const InpCodeFontSizeValue = this.value
+                 // CodeMirrorCode.style.fontSize = String(InpCodeFontSizeValue) + "px"
+                editor.getWrapperElement().style.fontSize = String(InpCodeFontSizeValue) + "px"
+                editor.refresh();
+
+                localStorage.setItem('InpCodeFontSize', InpCodeFontSizeValue);
+            });
+        </script>
+    </div>
+    {% elif file_type == "csv" %}
+    <div class="col-auto" style="padding: 5px;">
+        <p>разделитель:</p>
+    </div>
+    <div class="col">
+        <input id="inp-csv-delimiter" class="form-control text-center" style="width: 35px;" value="{{ file_data[0] }}">
+        <script>
+            const InpCsvDelimiter = document.getElementById("inp-csv-delimiter");
+
+            InpCsvDelimiter.addEventListener('input', function() {
+                let delimiter = this.value;
+                if (delimiter !== "") {
+                    let encode_delimiter = encodeURIComponent(delimiter);
+                    window.location.href = "http://127.0.0.1:8086/project/{{ id }}/file/{{ path }}?delimiter=" + encode_delimiter;
+                }
+            });
+        </script>
+    </div>
+    {% endif %}
+    </div>
 {% endblock %}

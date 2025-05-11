@@ -1,25 +1,19 @@
-    .comment {
-        border: 1px solid #ddd;
-        margin-bottom: 10px;
-        padding: 10px;
-        border-radius: 5px;
-    }
+/*.comment-header {*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    align-items: center;*/
+/*    margin-bottom: 5px;*/
+/*}*/
 
-    .comment-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 5px;
-    }
-
-    .comment-date {
-        font-size: 0.8em;
-        color: #000;
-    }
-
-    .comment-body {
-        word-wrap: break-word;
-    }
+/*.comment {*/
+/*    border: 1px solid #ddd;*/
+/*    margin-bottom: 10px;*/
+/*    padding: 10px;*/
+/*    border-radius: 5px;*/
+/*}*/
+/*.comment-body {*/
+/*    word-wrap: break-word;*/
+/*}*/
 
 .like-dislike {
     display: flex; /* Размещаем кнопки в строку */
@@ -37,15 +31,15 @@
     margin-right: 10px; /* Добавляем отступ между кнопками */
 }
 
-.like-button img,
-.dislike-button img {
-    width: 20px;
-    height: 20px;
-    margin-right: 5px;
-}
+/*.like-button img,*/
+/*.dislike-button img {*/
+/*    width: 20px;*/
+/*    height: 20px;*/
+/*    margin-right: 5px;*/
+/*}*/
 
-.like-button:disabled,
-.dislike-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
+/*.like-button:disabled,*/
+/*.dislike-button:disabled {*/
+/*    opacity: 0.5;*/
+/*    cursor: not-allowed;*/
+/*}*/

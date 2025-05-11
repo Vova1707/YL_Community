@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}Документация{% endblock %}
+
+{% block content %}
+    <h1>Документация</h1>
+    <p class="text-primary">Данные подгружаются из README в проекте</p>
+    {{ readme_data | safe }}
+{% endblock %}

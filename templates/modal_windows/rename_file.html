@@ -1,0 +1,21 @@
+<div class="modal fade" id="modal-rename-file" tabindex="-1" aria-labelledby="modal-rename-file-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-rename-file-label">Переименовать файл</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+
+            <form id="nodesign" method="GET" action="{{ url_for('project.rename_file', id_project=id, path=path, new_name=name_file) }}" class="mb-3">
+                <div class="modal-body">
+                    <input type="text" name="new_name" class="form-control rounded" placeholder="Название файла" aria-label="Название файла" value="{{ name_file or '' }}">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

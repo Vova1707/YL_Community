@@ -1,0 +1,89 @@
+<div class="card mb-4 col-md-8" style="justify-self: center">
+<div class="card-header">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <div class="gradient-shadow-box" data-theme="dark">
+            {% if poster.user.image_profile %}
+                <img src="data:image/jpeg;base64,{{ base64.b64encode(poster.user.image_profile).decode('utf-8') }}" class="profile-img rounded-circle mr-3"
+                     style="width: 40px; height: 40px; object-fit: cover;" alt="Аватарка">
+            {% else %}
+                <img src="" class="rounded-circle mr-3"
+                     style="width: 40px; height: 40px; object-fit: cover;" alt="Аватарка">
+            {% endif %}
+            </div>
+            <a class="btn-link" style="margin: 0 10px;" href="{{ url_for('profile.index', user_id=poster.user.id) }}">{{ poster.user.name }}</a>
+        </div>
+    </div>
+</div>
+<div class="card-body">
+
+    {% if ((images|length > 0) if type_include_blog == "comments" else (poster.id in images and images[poster.id]|length > 0)) %}
+        <div id="carouselExampleControls-{{ poster.id }}" class="carousel slide" data-bs-ride="false" data-bs-interval="0">
+            <div class="carousel-inner">
+                {% for image in (images if type_include_blog == "comments" else images[poster.id]) %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <img src="data:image/jpeg;base64,{{ base64.b64encode(image).decode('utf-8') }}"
+                             class="d-block w-100" style="height: 400px; width: auto; object-fit: contain;"
+                             alt="Изображение">
+                    </div>
+                {% endfor %}
+            </div>
+            {% if ((images|length > 1) if type_include_blog == "comments" else (poster.id in images and images[poster.id]|length > 1)) %}
+            <svg style="width: 0; height: 0; margin: 0 0; padding: 0 0;">
+                <defs>
+                    <clipPath id="carousel-control-prev">
+                        <path d="M100,0 Q80,70 60,90 S0,150 60,210 Q80,230 100,300" />
+                    </clipPath>
+                    <clipPath id="carousel-control-next">
+                        {% set shift = 52 %}
+                        <path d="M{{ shift }},0 Q{{ shift + 20 }},70 {{ shift + 40 }},90 S{{ shift + 100 }},150 {{ shift + 40 }},210 Q{{ shift + 20 }},230 {{ shift }},300" />
+                    </clipPath>
+                </defs>
+            </svg>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls-{{ poster.id }}" data-bs-slide="prev" type_use="blogs"><</button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls-{{ poster.id }}" data-bs-slide="next" type_use="blogs">></button>
+            {% endif %}
+        </div>
+    {% endif %}
+    <p class="card-text mt-3">{{ poster.description }}</p>
+    <div class="d-flex justify-content-start align-items-center mt-3">
+        <div class="mr-3">
+            <form id="nodesign" class="like-form" method="POST" action="{{ url_for('blog.like_poster', post_id=poster.id) }}">
+                <button class='like btn btn-success btn-sm' type="submit" {% if has_liked %}disabled{% endif %}>
+{#                                    <img src="{{ url_for('static', filename='img/like.png') }}" alt="Лайк" style="height: 20px; width: 25px; border: none; background: none; padding: 0; outline: none;">#}
+                    👍
+                    <span class="like-count">{{ poster.likes }}</span>
+                </button>
+            </form>
+        </div>
+        <div>
+            <form id="nodesign" class="dislike-form" method="POST" action="{{ url_for('blog.dislike_poster', post_id=poster.id) }}">
+                <button class='dislike btn btn-danger btn-sm' type="submit" {% if has_disliked %}disabled{% endif %}>
+{#                                    <img src="{{ url_for('static', filename='img/dislike.png') }}" style="height: 20px; width: 20px border: none; background: none; padding: 0; outline: none;" alt="Дизлайк">#}
+                    👎
+                    <span class="dislike-count">{{ poster.dislikes }}</span>
+                </button>
+            </form>
+        </div>
+        {% for tag in ["тег1", "тег2"] %} <!-- {{ poster.tags }} -->
+            #{{ tag }}
+        {% endfor %}
+
+    </div>
+</div>
+<div class="card-footer text-muted">
+    <div class="d-flex justify-content-between align-items-center">
+        <small>{{ poster.date_posted|date }}</small>
+        <div>
+            {% if current_user.id == poster.user.id %}
+            <a role="button" class="btn btn-primary btn-sm mr-2"
+               href="{{ url_for('blog.edit_blog_post', post_id=poster.id) }}">Редактировать</a>
+            <a role="button" class="btn btn-danger btn-sm"
+               href="{{ url_for('blog.delete', post_id=poster.id) }}">Удалить</a>
+            {% endif %}
+            <a role="button" class="btn btn-info btn-sm"
+               href="{{ url_for('blog.poster_detail', post_id=poster.id) }}">Комментарии</a>
+        </div>
+    </div>
+</div>
+</div>

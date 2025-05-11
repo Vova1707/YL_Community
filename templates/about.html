@@ -1,0 +1,345 @@
+{% extends 'base.html' %}
+{% set have_parallax = 0 %}
+
+{% block title %}О нас{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+
+<script>
+function random_num(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+</script>
+
+<script>
+    {% for class in ["Sasha", "Vova", "static", "project-1", "project-2", "project-3", "project-4", "project-10", "project-11"] %}
+    document.addEventListener('DOMContentLoaded', () => {
+    const animatedElements = document.querySelectorAll('.about-{{ class }}');
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                    // observer.unobserve(entry.target); // Отключить наблюдение (опционально)
+                } else {
+                    entry.target.classList.remove('animated');
+                }
+            });
+        },
+        { threshold: 0 }
+    );
+    animatedElements.forEach((el) => observer.observe(el));
+    });
+    {% endfor %}
+</script>
+
+<div id="dop-base-container" style="position: relative; left: 0; right: 0; justify-items: center; justify-self: center; overflow: hidden; width: 1800px; height: 3000px">
+    <p class="about-static mouse-gradient" style="font-family: 'Ambidexter_font', sans-serif; font-size: 200px; justify-self: center">О нас</p>
+
+    <div style="display: flex; height: 100vh;">
+        <div class="about-Sasha">
+            {% set w_about_Sasha_img = 520 %} {% set h_about_Sasha_img = 670 %}
+            <img src="{{ url_for('static', filename='img/about/Sasha_logo.png') }}"
+               alt="" style="width: {{ w_about_Sasha_img }}px; height: {{ h_about_Sasha_img }}px;">
+            <p class="glass-text"
+               style="position: absolute; left: 636px; top: 255px; width: 200px;
+                      font-family: 'Epilepsy_font', sans-serif; font-size: 70px;">
+               О СЕБЕ
+            </p>
+            <svg style="width: 0; height: 0; margin: 0 0; padding: 0 0;">
+                <defs>
+                    {% set w_about_Sasha_text = 450 %} {% set h_about_Sasha_text = 170 %}
+                    {% set w_groove_Sasha_text = 95 %} {% set h_groove_Sasha_text = 60 %}
+                    <clipPath id="about-Sasha-text-path">
+                        <path d="M0,0
+                                H{{ w_about_Sasha_text }}
+                                V{{ h_about_Sasha_text }}
+                                H{{ w_groove_Sasha_text }}
+                                A{{ w_about_Sasha_img }},{{ h_about_Sasha_img }} 0 0 0 0,{{ h_about_Sasha_text - h_groove_Sasha_text }}
+                                V0
+                                Z" />
+                    </clipPath>
+                    {% set w_about_Sasha_link = 585 %} {% set h_about_Sasha_link = 150 %}
+                    {% set w_groove_Sasha_link = 200 %} {% set h_groove_Sasha_link = 40 %}
+                    <clipPath id="about-Sasha-link-path">
+                        <path d="M0,{{ h_groove_Sasha_link }}
+                                A{{ w_about_Sasha_img - 100 }},{{ h_about_Sasha_img + 50 }} 0 0 0 {{ w_groove_Sasha_link }},0
+                                H{{ w_about_Sasha_link }}
+                                V{{ h_about_Sasha_link }}
+                                H0
+                                V0
+                                Z" />
+                    </clipPath>
+                </defs>
+            </svg>
+            <div id="about-Sasha-text"
+                 style="position: absolute;
+                        left: 380px; top: 120px; width: {{ w_about_Sasha_text }}px; height: {{ h_about_Sasha_text }}px; padding: 5px 20px;
+                        font-size: 18px; text-align: right;
+                        border-radius: 10px 10px 0 0;
+                        clip-path: url(#about-Sasha-text-path);
+                        background: linear-gradient(30deg, var(--dopmain-color), rgba(205, 214, 219, 0.3) 25%); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+                        display: grid; align-content: end;">
+                <p>Я, Попов Александр, программист и дизайнер. В этом проекте я работал над дизайном сайта, структурой сайта, написанием микросервисов</p>
+{#                <img src="{{ url_for('static', filename='img/about/Sasha_smudges.png') }}"#}
+{#               alt="" style="position: absolute; width: 355px; height: {{ h_about_Sasha_smudges }}px; left: 475px; top: 289px">#}
+            </div>
+            {% for el in [["дизайн", 355, 100, 10], ["структура", 465, 100, -8], ["микросервисы", 635, 100, 5]] %}
+            <p class="gradient-text" dir="{{ (loop.index % 2 == 0) * 1 }}"
+               style="position: absolute; left: {{ el[1] }}px; top: {{ el[2] }}px; transform: rotate({{ el[3] }}deg);
+                      font-family: 'Ambidexter_font', sans-serif; font-size: 35px;">
+                {{ el[0] }}
+            </p>
+            {% endfor %}
+            <p class="glass-text"
+                   style="position: absolute; left: 500px; top: 543px;
+                          font-family: 'Epilepsy_font', sans-serif; font-size: 70px;">
+                   КОНТАКТЫ
+            </p>
+            <div class="container"
+                 style="position: absolute; padding: 10px 40px;
+                        left: 250px; top: 620px; width: {{ w_about_Sasha_link }}px; height: {{ h_about_Sasha_link }}px;
+                        font-size: 18px;
+                        border-radius: 0 0 10px 10px;
+                        clip-path: url(#about-Sasha-link-path);
+                        background: linear-gradient(160deg, var(--dopmain-color), rgba(205, 214, 219, 0.3) 30%); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+                {% for link in [["тг", "https://t.me/ProstoSaniok"], ["github", "https://github.com/ImennoYASaniok"], ["почта", "Banlichelendsh@yandex.ru"]] %}
+                    <div class="row" style="justify-self: right;">
+                        <div class="col"><p id="about-Sasha-design-text-{{ loop.index }}" class="gradient-text" dir="{{ (loop.index % 2 == 0) * 1 }}"
+                            style="font-family: 'Ambidexter_font', sans-serif; font-size: 30px;
+                            line-height: 1.1; margin-top: -5px;">{{ link[0] }}:</p></div>
+                        <script>
+                            document.getElementById('about-Sasha-design-text-{{ loop.index }}').style.transform = "rotate("+String(random_num(-8, 8))+"deg)";
+                        </script>
+                        <div class="col" style="margin-top: 5px; padding: 0 0; line-height: 0.9;">
+                            <a class="btn-link" href={{ "https://mail.yandex.ru/compose?to=" if link[0] == "почта" else "" }}"{{ link[1] }}" target="_blank" rel="noopener noreferrer">{{ link[1] }}</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="about-Vova">
+            {% set w_about_Vova_img = 520 %} {% set h_about_Vova_img = 600 %}
+            <img src="{{ url_for('static', filename='img/about/Vova_logo.png') }}"
+               alt="" style="width: {{ w_about_Vova_img }}px; height: {{ h_about_Vova_img }}px;">
+            <svg style="width: 0; height: 0; margin: 0 0; padding: 0 0;">
+                <defs>
+                    {% set w_about_Vova_text = 500 %} {% set h_about_Vova_text = 170 %}
+                    {% set w_groove_Vova_text = 85 %} {% set h_groove_Vova_text = 70 %}
+                    <clipPath id="about-Vova-text-path">
+                        <path d="M0,0
+                                H{{ w_about_Vova_text }}
+                                V{{ h_about_Vova_text - h_groove_Vova_text }}
+                                A{{ w_about_Vova_img }},{{ h_about_Vova_img }} 0 0 0 {{ w_about_Vova_text - w_groove_Vova_text }},{{ h_about_Vova_text }}
+                                H0
+                                V0
+                                Z" />
+                    </clipPath>
+                    {% set w_about_Vova_link = 655 %} {% set h_about_Vova_link = 150 %}
+                    {% set w_groove_Vova_link = 200 %} {% set h_groove_Vova_link = 40 %}
+                    <clipPath id="about-Vova-link-path">
+                        <path d="M0,0
+                            H{{ w_about_Vova_link - w_groove_Vova_link }}
+                            A{{ w_about_Vova_img }},{{ h_about_Vova_img }} 0 0 0 {{ w_about_Vova_link }},{{ h_groove_Vova_link }}
+                            V{{ h_about_Vova_link }}
+                            H0
+                            V0
+                            Z" />
+                    </clipPath>
+                </defs>
+            </svg>
+            <p class="glass-text"
+               style="position: absolute; left: -350px; top: 205px; width: 200px;
+                      font-family: 'Epilepsy_font', sans-serif; font-size: 70px;">
+               О СЕБЕ
+            </p>
+            <div id="about-Vova-text"
+                 style="position: absolute;
+                        left: -350px; top: 70px; width: {{ w_about_Vova_text }}px; height: {{ h_about_Vova_text }}px; padding: 5px 20px;
+                        font-size: 18px; text-align: left;
+                        border-radius: 10px 10px 0 0;
+                        clip-path: url(#about-Vova-text-path);
+                        background: linear-gradient(-30deg, var(--dopsecond-color), rgba(205, 214, 219, 0.3) 25%); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+                        display: grid; align-content: end;">
+                 <p style="margin: 0 0;">Я, Кондрахин Владимир, программист.</p>
+                 <p style="width: {{ w_about_Vova_text - 40 - 50 }}px;">В этом проекте я работал над структурой сайта, написанием микросервисов, с базами данных</p>
+            </div>
+            {% for el in [["структура", -380, 40, -5], ["микросервисы", -210, 50, 8], ["базы_данных", 20, 50, -10]] %}
+            <p class="gradient-text" dir="{{ (loop.index % 2 == 0) * 1 }}"
+               style="position: absolute; left: {{ el[1] }}px; top: {{ el[2] }}px; transform: rotate({{ el[3] }}deg);
+                      font-family: 'Ambidexter_font', sans-serif; font-size: 35px;">
+                {{ el[0] }}
+            </p>
+            {% endfor %}
+            <p class="glass-text"
+               style="position: absolute; left: -350px; top: 495px;
+                      font-family: 'Epilepsy_font', sans-serif; font-size: 70px;">
+               КОНТАКТЫ
+            </p>
+            <div class="container"
+                    style="position: absolute; padding: 10px 40px;
+                        left: -350px; top: 570px; width: {{ w_about_Vova_link }}px; height: {{ h_about_Vova_link }}px;
+                        font-size: 18px; text-align: left;
+                        border-radius: 0 0 10px 10px;
+                        clip-path: url(#about-Vova-link-path);
+                        background: linear-gradient(-160deg, var(--dopsecond-color), rgba(205, 214, 219, 0.3) 30%); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+                {% for link in [["тг", "https://t.me/Vivan1234567"], ["github", "https://github.com/Vova1707"], ["почта", "kondrahinvov@yandex.ru"]] %}
+                    <div class="row">
+                        <div class="col-auto"><p id="about-Vova-design-text-{{ loop.index }}" class="gradient-text" dir="{{ (loop.index % 2 == 0) * 1 }}"
+                            style="font-family: 'Ambidexter_font', sans-serif; font-size: 30px;
+                            line-height: 1.1; margin-top: -5px;">{{ link[0] }}:</p></div>
+                        <script>
+                            document.getElementById('about-Vova-design-text-{{ loop.index }}').style.transform = "rotate("+String(random_num(-8, 8))+"deg)";
+                        </script>
+                        <div class="col"> <!--  style="margin-top: 5px; padding: 0 0; line-height: 0.9;" -->
+                            <a class="btn-link" href={{ "https://mail.yandex.ru/compose?to=" if link[0] == "почта" else "" }}"{{ link[1] }}" target="_blank" rel="noopener noreferrer">{{ link[1] }}</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div id="cursor-circle-ON" class="cursor-circle" type-project="ON"></div>
+        <div class="glass about-project-1" id="about-project-1"
+             style="position: absolute; left: 90px; top: 1200px; width: 610px; height: 300px;
+                    border-radius: 10px; padding-left: 15px;">
+
+            <p class="gradient-text-ON"
+               style="font-family: 'Ambidexter_font', sans-serif;
+               font-size: 55px; width: fit-content;">Игра Office Nightmare<p>
+
+            <p style="font-size: 18px;">Office Nightmare - игра, шутер с элеменетами хоррора, написанная на языке программирования python.</p>
+            <a style="font-size: 18px; position: absolute; top: 170px;" class="btn-link-ON" href="https://github.com/ImennoYASaniok/Office_Nightmare/tree/develop" target="_blank" rel="noopener noreferrer">ссылочка</a>
+
+            <img src="{{ url_for('static', filename='img/about/ON_1.png') }}"
+               alt="" style="position: relative; top: 30px; left: 300px; width: 240px; height: 145px;">
+            <img src="{{ url_for('static', filename='img/about/ON_2.png') }}"
+               alt="" style="position: absolute; top: 200px; left: 0; width: 300px; height: 145px;">
+        </div>
+        <div id="cursor-circle-CVM" class="cursor-circle" type-project="CVM"></div>
+        <div class="glass about-project-2" id="about-project-2"
+             style="position: absolute; left: 90px; top: 1600px; width: 610px; height: 400px;
+                    border-radius: 10px; padding-left: 15px;">
+            <p class="gradient-text-CVM"
+               style="font-family: 'Ambidexter_font', sans-serif;
+               font-size: 55px; width: fit-content;">Приложение CVM<p>
+
+            <p style="font-size: 18px;">CVM – OpenCV Mouse, приложение для управления курсором мыши с помощью пальцев рук.</p>
+            <p style="font-size: 18px;">Управление курсором с помощью перемещения кончиков пальцев руки в зоне работы камеры и имитация нажатий на кнопки мыши с помощью жестов руки (касание большого пальца с кончиками остальных пальцев руки)</p>
+            <a style="font-size: 18px; position: absolute; top: 280px;" class="btn-link-CVM" href="https://disk.yandex.ru/d/BeN9rtrdapmPDA" target="_blank" rel="noopener noreferrer">ссылочка</a>
+
+            <img src="{{ url_for('static', filename='img/about/CVM_1.png') }}" alt=""
+                 style="position: absolute; top: 300px; left: 30px; width: 170px; height: 170px; transform: rotate(-4deg);">
+            <img src="{{ url_for('static', filename='img/about/CVM_2.png') }}" alt=""
+                 style="position: absolute; top: 180px; left: 350px; width: 400px; height: 300px; transform: rotate(20deg);">
+
+        </div>
+        <div id="cursor-circle-VIZ" class="cursor-circle" type-project="VIZ"></div>
+        <div class="glass about-project-3" id="about-project-3"
+             style="position: absolute; right: 90px; top: 1200px; width: 610px; height: 450px;
+                    border-radius: 10px; padding-left: 15px;">
+            <p class="gradient-text-VIZ"
+               style="font-family: 'Ambidexter_font', sans-serif;
+               font-size: 55px; width: fit-content;">Приложение VizSQL<p>
+
+            <p style="font-size: 18px;">VizSQL - программное обеспечение для баз данных</p>
+            <p style="font-size: 18px;">-> Помогает освоить SQL всем новичкам и понять что это такое. Сейчас очень много людей изучают эту тему, а данный проект может им помочь с этим.</p>
+            <p style="font-size: 18px;">-> Удобный интерфейс позволяет использовать данный проект в любой сфере деятельности где нужна работа с данными</p>
+            <a style="font-size: 18px; position: absolute; top: 320px;" class="btn-link-VIZ" href="https://disk.yandex.ru/d/3uV9WcKVLqjbLw" target="_blank" rel="noopener noreferrer">ссылочка</a>
+
+            <img src="{{ url_for('static', filename='img/about/VIZ_1.png') }}" alt=""
+                 style="position: relative; top: 30px; left: 0; width: 100px; height: 100px; transform: rotate(-12deg);">
+            <img src="{{ url_for('static', filename='img/about/VIZ_2.png') }}" alt=""
+                 style="position: relative; top: 0; left: 150px; width: 360px; height: 80px; transform: rotate(4deg); border-radius: 10px;">
+        </div>
+        <div id="cursor-circle-BPB" class="cursor-circle" type-project="BPB"></div>
+        <div class="glass about-project-4" id="about-project-4"
+             style="position: absolute; right: 90px; top: 1700px; width: 610px; height: 300px;
+                    border-radius: 10px; padding-left: 15px;">
+            <p class="gradient-text-BPB"
+               style="font-family: 'Ambidexter_font', sans-serif;
+               font-size: 55px; width: fit-content;">Игра Bad Pix Battle<p>
+
+            <p style="font-size: 18px;">Bad Pix Battle – это игра, которая является пиксельных аналогом мини-игры Bed Wars игры Minecraft. Главная задача этой игры - заменить собой Bed Wars.</p>
+            <a style="font-size: 18px;" class="btn-link-BPB" href="https://github.com/Vova1707/Bad-Pix-Battle" target="_blank" rel="noopener noreferrer">ссылочка</a>
+
+            <img src="{{ url_for('static', filename='img/about/BPB_1.png') }}" alt=""
+                 style="position: absolute; top: 140px; left: 440px; width: 170px; height: 250px; transform: rotate(10deg);">
+            <img src="{{ url_for('static', filename='img/about/BPB_2.png') }}" alt=""
+                 style="position: absolute; top: 220px; left: -20px; width: 300px; height: 140px; transform: rotate(-10deg);">
+        </div>
+
+        <div style="font-family: 'Ambidexter_font', sans-serif; font-size: 180px; position: relative; top: 800px;">
+            {% for sym in "ПРОЕКТЫ" %}
+                <p id="about-text-{{ loop.index }}" class="about-static mouse-gradient" dir="0" style="margin-bottom: -130px;">{{ sym }}</p>
+                <script>
+                    document.getElementById('about-text-{{ loop.index }}').style.transform = "rotate("+String(random_num(-12, 12))+"deg)";
+                </script>
+            {% endfor %}
+        </div>
+
+        <p class="about-static mouse-gradient" style="font-family: 'Ambidexter_font', sans-serif; font-size: 180px; position: absolute; top: 2200px; left: 0">
+            Совместные проекты
+        </p>
+        <div id="cursor-circle-GJ" class="cursor-circle" type-project="GJ"></div>
+        <div class="glass about-project-10" id="about-project-10"
+             style="position: absolute; left: 80px; top: 2370px; width: 770px; height: 500px;
+                    border-radius: 10px; padding-left: 15px;">
+            <p class="gradient-text-GJ"
+               style="font-family: 'Ambidexter_font', sans-serif;
+               font-size: 55px; width: fit-content;">Проект с хакатона Game-Jam<p>
+
+            <p style="font-size: 18px; margin-bottom: 0"><b class="gradient-text-GJ">Про хакатон:</b> Game jam - это мероприятие, на котором разработчики игр, художники, дизайнеры и другие творческие люди собираются вместе, чтобы в течение короткого времени создать прототип видеоигры.</p>
+            <a style="font-size: 18px;" class="btn-link-GJ" href="https://www.xn--80aa3anexr8c.xn--p1acf/tpost/syxuzglag1-game-jam" target="_blank" rel="noopener noreferrer">ссылочка на хакатон</a>
+            {% set about_list_link = [["Попов Александр", "https://t.me/ProstoSaniok", "https://mail.yandex.ru/compose?to=Banlichelendsh@yandex.ru"], ["Кондрахин Владимир", "https://t.me/Vivan1234567", "https://mail.yandex.ru/compose?to=Banlichelendsh@yandex.ru"], ["Ртищев Андрей", "https://t.me/AndrewSpaceLink", "https://mail.google.com/mail/?view=cm&fs=1&to=andyspacex10@gmail.com"], ["Котов Иван", "https://t.me/vk7cuber"]]%}
+            <p style="font-size: 18px; margin-top: 20px; margin-bottom: 0"><b class="gradient-text-GJ">Про игру:</b> Мы были командой "4D пончик". Состав: {% for el in about_list_link %}<a class="btn-link-GJ" href="{{ el[1] }}" target="_blank" rel="noopener noreferrer">{{ el[0] }}</a>{% if el|length >= 3 %} (<a class="btn-link-GJ" href="{{ el[2] }}" target="_blank" rel="noopener noreferrer">почта</a>){% endif %}{{ ", " if loop.index < about_list_link|length else "" }}{% endfor %}. Выбрав кейс мы решили создать симулятор самого компьютерного клуба. В ней у пользователь должен проходить мини игры и получать за них валюту в случае победы.</p>
+            <a style="font-size: 18px; position: absolute; top: 360px;" class="btn-link-GJ" href="https://disk.yandex.ru/d/Envu1xOMhFxheA" target="_blank" rel="noopener noreferrer">ссылочка на игру</a>
+            <img src="{{ url_for('static', filename='img/about/GJ_2.png') }}" alt=""
+                 style="position: relative; top: 0; left: 100px; width: 250px; height: 170px; transform: rotate(-3deg); border-radius: 10px;">
+            <img src="{{ url_for('static', filename='img/about/GJ_1.png') }}" alt=""
+                 style="position: relative; top: 0; left: 350px; width: 200px; height: 200px; transform: rotate(6deg); border-radius: 10px;">
+        </div>
+        <div id="cursor-circle-YLC" class="cursor-circle" type-project="YLC"></div>
+        <div class="glass about-project-10" id="about-project-11"
+             style="position: absolute; left: 980px; top: 2370px; width: 670px; height: 430px;
+                    border-radius: 10px; padding-left: 15px;">
+            <p class="gradient-text-YLC"
+               style="font-family: 'Ambidexter_font', sans-serif;
+               font-size: 55px; width: fit-content;">Сайт YL Community<p>
+
+            <p style="font-size: 18px; margin-bottom: 0">YL Community - это сайт, на котором вы находитесь, Это социальная сеть для учеников Яндекс Лицея и для всех, кто как то связан с Яндекс Образованием. В ней ученики и учителя смогут делиться проектами, выкладывать свои личные достижения, связанные с образованием, и не только, вести свой личный блок, участвовать или проводить различные квесты, проекты или конкурсы.</p>
+            <a style="font-size: 18px;" class="btn-link-YLC" href="https://github.com/Vova1707/YL_Community" target="_blank" rel="noopener noreferrer">ссылочка на гит</a>
+
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt=""
+                 style="position: absolute; top: 270px; left: 540px; width: 200px; height: 200px; transform: rotate(-10deg);">
+        </div>
+
+        <script>
+            for (let i of [1, 2, 3, 4, 10, 11]) document.getElementById('about-project-'+String(i)).style.transform = "rotate("+String(random_num(-3, 3))+"deg)";
+
+            {% for id in [[1, "ON"], [2, "CVM"], [3, "VIZ"], [4, "BPB"], [10, "GJ"], [11, "YLC"]]%}
+                function CircleCursorProject{{ loop.index }}() {
+                    const aboutEl = document.getElementById("about-project-{{ id[0] }}");
+                    const aboutCircle = document.getElementById("cursor-circle-{{ id[1] }}");
+                    console.log(aboutEl);
+                    console.log(aboutCircle);
+
+                    aboutEl.addEventListener('mouseenter', () => { aboutCircle.style.display = 'block'; });
+                    aboutEl.addEventListener('mouseleave', () => { aboutCircle.style.display = 'none'; });
+                    aboutEl.addEventListener('mousemove', (e) => {
+                        const rect = aboutEl.getBoundingClientRect();
+                        const x = e.clientX; //  - rect.left  + rect.left
+                        const y = e.clientY; //  - rect.top  + rect.top
+                        aboutCircle.style.left = `${x}px`;
+                        aboutCircle.style.top = `${y}px`;
+                    });
+                }
+                CircleCursorProject{{ loop.index }}();
+            {% endfor %}
+        </script>
+
+    </div>
+</div>
+{% endblock %}

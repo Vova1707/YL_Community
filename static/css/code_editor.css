@@ -1,0 +1,61 @@
+.list-group-item#code-editor {
+    resize: horizontal;
+    min-width: 200px;
+    border-radius: 5px;
+    /* box-shadow: 0 0 20px var(--second-color);*/
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+.list-group-item#code-editor[data-theme="light"] {
+     background-color: var(--bg-code-editor-light) !important;
+}
+.list-group-item#code-editor[data-theme="dark"] {
+     background-color: var(--bg-code-editor-dark) !important;
+}
+
+.div-code-editor {
+    border-radius: 5px;
+    /* box-shadow: 0 0 20px var(--second-color);*/
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+.div-code-editor[data-theme="light"] {
+     background: var(--bg-code-editor-light) !important;
+}
+.div-code-editor[data-theme="dark"] {
+     background: var(--bg-code-editor-dark) !important;
+}
+.CodeMirror {
+    border-radius: 5px;
+    resize: none;
+    overflow: hidden;
+    height: 72vh;
+}
+.cm-s-yltheme {
+    background: rgba(0, 0, 0, 0); !important;
+    color: var(--lightmain-color) !important;
+}
+.cm-s-yltheme .CodeMirror-gutters {
+    background: var(--bg-code-editor-mid) !important;
+    border-right: 1px solid var(--darkmain-color);
+}
+.cm-s-yltheme .CodeMirror-linenumber {
+    color: var(--dopmain-color) !important;
+    font-weight: bold;
+}
+.cm-s-yltheme .CodeMirror-cursor {
+    border-left: 2px solid var(--dopsecond-color) !important;
+}
+.cm-s-yltheme .CodeMirror-selected {
+    background-color:  var(--darkmain-color) !important;
+    color: var(--bg-dark-color) !important;
+}
+.cm-s-yltheme .cm-keyword { color: var(--dopsecond-color) !important; }
+.cm-s-yltheme .cm-string { color: var(--main-color) !important; }
+.cm-s-yltheme .cm-comment { color: var(--dopdark-color) !important; font-style: italic; }
+.cm-s-yltheme .cm-number { color: var(--dopmain-color) !important; }
+.cm-s-yltheme .cm-operator { color: var(--dark-color) !important; }
+.cm-s-yltheme .cm-def { color: var(--midsecond-color) !important; }
+.cm-s-yltheme .cm-builtin { color: var(--dop2second-color) !important; }
+.cm-s-yltheme .cm-property { color: var(--dop2second-color) !important; }
+.cm-s-yltheme .cm-meta { color: var(--second-color) !important; }

@@ -20,8 +20,15 @@
             Структура
           </button>
         </h2>
-        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
-          {% include 'includes/tree_archive.html'%}
+        <div style="margin: 20px 20px;" id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+            {% if file_data != None %}
+                <a role="button" class="btn btn-primary" href="{{ url_for('project.set_archive', id=id) }}">Перезагрузить архив</a>
+                <a role="button" class="btn btn-primary" href="{{ url_for('project.download_archive', id=id) }}">Скачать архив</a>
+                <a role="button" class="btn btn-primary" href="{{ url_for('project.delete_archive', id=id) }}">Удалить архив</a>
+            {% else %}
+                <a role="button" class="btn btn-primary" href="{{ url_for('project.set_archive', id=id) }}">Загрузить архив</a>
+            {% endif %}
+            <div style="margin-top: 20px">{% if file_tree != None %} {% include 'includes/tree_archive.html'%} {% endif %}</div>
         </div>
       </div>
       <div class="accordion-item">
@@ -32,7 +39,13 @@
         </h2>
         <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
           <div class="accordion-body">
-              <div>{{ description }}</div>
+              {% if description != "" %}
+                    <a role="button" class="btn btn-primary" href="{{ url_for('project.set_description', id=id) }}">Изменить описание</a>
+                    <a role="button" class="btn btn-primary" href="{{ url_for('project.delete_description', id=id) }}">Удалить описание</a>
+                    <div style="margin-top: 10px;">{{ description }}</div>
+              {% else %}
+                  <a role="button" class="btn btn-primary" href="{{ url_for('project.set_description', id=id) }}">Загрузить описание</a>
+              {% endif %}
           </div>
         </div>
       </div>

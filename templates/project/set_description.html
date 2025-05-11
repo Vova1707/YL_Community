@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Изменение описания проекта{% endblock %}
+
+{% block content %}
+    <h1>Изменение описания проекта</h1>
+    <form method="POST" action="" enctype="multipart/form-data" novalidate>
+        {{ form.hidden_tag() }}
+        <h2>{{ project_title }}</h2>
+        <div class="mb-3">
+            <div class="row mb-0">{{ form.description.label }}</div>
+            <div class="row"><small class="text-muted">{{ form.description_doptext }}</small></div>
+            {{ form.description(class="form-control") }}
+            {% for error in form.description.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Изменить</button>
+        <a class="btn btn-secondary" href="{{ url_for('project.open_project', id=project_id) }}">Отмена</a>
+    </form>
+{% endblock %}

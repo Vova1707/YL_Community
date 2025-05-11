@@ -1,4 +1,4 @@
-<div class="accordion-body m-0" data-theme="dark" style="position: relative">
+<div class="accordion-body m-0" data-theme="dark" style="position: relative; padding: 0;">
   {% if file_tree %}
       <ul class="div-code-editor list-group">
         {% macro render_tree(tree, parent_id='root') %}
@@ -15,7 +15,23 @@
                         </div>
                     {% else %}
                         <a style="white-space: nowrap;" class="btn btn-primary p-0 m-0" id="dop" href="{{ url_for("project.open_file", id_project=id, path=node.path) }}">
-                            📄{{ node.name }}
+                            {% set table_files = ['csv', 'xls', 'tsv', 'ods', 'xlsx'] %}
+                            {% set img_files = ["png", "jpg", "jpeg", "bmp", "gif", "tif", "tiff", "webp", "heic", "heif", "ico", "dds", "raw", "exr", "svg", "eps", "ai"] %}
+                            {% set other_files = ['cpp', 'css', 'html', 'java', 'js', 'py', 'sql'] %}
+                            {% if node.path.split('.')[-1] in table_files %}
+                            <img src="{{ url_for('static', filename='img/code_icons/table.png') }}"
+                                alt="📄" style="width: 20px; height: 20px; margin: 0 0">
+                            {% elif node.path.split('.')[-1] in img_files %}
+                            <img src="{{ url_for('static', filename='img/code_icons/img.png') }}"
+                                alt="📄" style="width: 20px; height: 20px; margin: 0 0">
+                            {% elif node.path.split('.')[-1] in other_files %}
+                            <img src="{{ url_for('static', filename='img/code_icons/'+node.path.split('.')[-1]+'.png') }}"
+                                alt="📄" style="width: 20px; height: 20px; margin: 0 0">
+                            {% else %}
+                            📄
+                            {% endif %}
+                            {{ node.name }}
+
                         </a>
                     {% endif %}
                 </li>

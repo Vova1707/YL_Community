@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Изменение архива проекта{% endblock %}
+
+{% block content %}
+    <h1>Изменение архива проекта</h1>
+    <form method="POST" action="" enctype="multipart/form-data" novalidate>
+        {{ form.hidden_tag() }}
+        <h2>{{ project_title }}</h2>
+        <div class="mb-3">
+            <div class="row mb-0">{{ form.file.label }}</div>
+            <div class="row mb-0"><small class="text-muted">{{ form.file_doptext }}</small></div>
+            <div class="row"><small class="text-muted">{{ form.file_extension_str }}</small></div>
+            {{ form.file(class="form-control") }}
+            {% for error in form.file.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">{{ form.submit.label.text }}</button>
+        <a class="btn btn-secondary" href="{{ url_for('project.open_project', id=project_id) }}">Отмена</a>
+    </form>
+{% endblock %}

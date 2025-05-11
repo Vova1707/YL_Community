@@ -63,12 +63,10 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        {% if  user.id == current_user.id %}
-        <div class="col"><h1>Ваши посты</h1></div>
-        {% else %}
-        <div class="col"><h1>Посты</h1></div>
-        {% endif %}
-        {% include 'includes/blogs.html' %}
-    </div>
+    {% if  user.id == current_user.id %}
+    <h1>Ваши посты</h1>
+    {% else %}
+    <h1>Посты</h1>
+    {% endif %}
+    {% include 'includes/blogs.html' %}
 {% endblock %}

@@ -110,7 +110,9 @@ def poster_detail(post_id):
     session = create_session()
     poster = session.query(Poster).get(post_id)
     images = [image.image for image in session.query(ImagePoster).filter(ImagePoster.post_id == post_id)]
-    comments = session.query(CommentPoster).filter(CommentPoster.post_id == post_id)
+    comments = list(session.query(CommentPoster).filter(CommentPoster.post_id == post_id))
+    user_comments = list(map(lambda comment: session.query(User).filter(User.id == comment.user_id)[0], comments))
+    comments = [{"comment":comments[i], "user":user_comments[i]} for i in range(len(comments))]
     if form.validate_on_submit():
         new_comment = CommentPoster(
             text=form.text.data,

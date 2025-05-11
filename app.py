@@ -4,6 +4,7 @@ from routes.profile_routes import profile_bp
 from routes.blog_routes import blog_bp
 from routes.project_routes import project_bp
 from routes.rating_routes import rating_bp
+from routes.forum_routes import forum_bp
 
 from settings import settings
 from db_session import global_init, create_session
@@ -13,6 +14,7 @@ from models.blog import Poster, ImagePoster
 import base64
 import os
 import uuid
+import markdown
 
 import random
 
@@ -31,6 +33,7 @@ app.register_blueprint(blog_bp)
 app.register_blueprint(profile_bp)
 app.register_blueprint(project_bp)
 app.register_blueprint(rating_bp)
+app.register_blueprint(forum_bp)
 
 @app.route('/')
 def index():
@@ -103,6 +106,30 @@ def error(code):
     else:
         flash(f'Ошибка с номером {code} не обрабатывается.', 'danger')
         return redirect('/')
+
+@app.route('/about')
+def about():
+    return render_template('about.html', have_parallax=False)
+
+@app.route('/documentation')
+def documentation():
+    with open("README.md", "r", encoding="utf-8") as f: readme_data = f.read()
+
+    check_label = "## скриншоты"
+    ind_check_label = readme_data.lower().find(check_label)
+    readme_data = readme_data[:ind_check_label] + readme_data[ind_check_label + len(check_label) + readme_data[ind_check_label + len(check_label):].find("##"):]
+
+    readme_data = markdown.markdown(readme_data, extensions=['fenced_code', 'tables'])
+    style_set = {
+        "<p>": "style='font-size: 16px'", "<small>": "style='font-size: 14px'", "<code>": "style='font-size: 18px'",
+        "<h2>": "style='margin-top: 30px;'", "<h3>": "style='margin-top: 25px;'",
+        "<img>": "style='border-radius: 10px; max-width: 100%; height: auto; display: block;'",
+        "<a>": "class='btn-link'"
+    }
+    for kv in style_set.items():
+        readme_data = readme_data.replace(kv[0][:-1], f"{kv[0][:-1]} {kv[1]}")
+
+    return render_template('documentation.html', readme_data=readme_data)
 
 
 if __name__ == '__main__':
