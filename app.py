@@ -67,7 +67,11 @@ def index():
         ):
             images[post.id].append(image.image)
     return render_template(
-        'index.html', news_data=news_data, posts=posts, images=images, base64=base64
+        'index.html',
+        news_data=news_data,
+        posts=posts,
+        images=images,
+        base64=base64,
     )
 
 

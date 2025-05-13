@@ -2,7 +2,6 @@ from app import app
 from db_session import global_init
 
 
-
 class TestView:
     def setup_method(self):
         global_init(app.config['DATABASE_URI'])
