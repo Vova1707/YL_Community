@@ -1,4 +1,12 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
+from flask import (
+    Blueprint,
+    render_template,
+    redirect,
+    url_for,
+    request,
+    flash,
+    jsonify,
+)
 from flask_login import login_required, current_user
 from db_session import create_session
 from models.blog import Poster, ImagePoster, CommentPoster, LikePoster
@@ -6,6 +14,7 @@ from forms.blog import BlogForms, CommentForm
 from models.users import User
 
 blog_bp = Blueprint('blog', __name__, url_prefix='/blog')
+
 
 @blog_bp.route('/create', methods=['GET', 'POST'])
 @login_required
@@ -24,7 +33,9 @@ def create_blog_post():
             if image:
                 if image.filename != '':
                     image_data = image.read()
-                    image = ImagePoster(image=image_data, post_id=blog_post.id)
+                    image = ImagePoster(
+                        image=image_data, post_id=blog_post.id
+                    )
                     image.post_id = blog_post.id
                     session.add(image)
         session.commit()
@@ -32,6 +43,7 @@ def create_blog_post():
         return redirect(url_for('profile.index'))
 
     return render_template('blog/create.html', form=form)
+
 
 @blog_bp.route('/<int:post_id>')
 @login_required
@@ -43,6 +55,7 @@ def view_blog_post(post_id):
         return redirect(url_for('profile.index'))
 
     return render_template('blog/view.html', post=post)
+
 
 @blog_bp.route('/<int:post_id>/edit', methods=['GET', 'POST'])
 @login_required
@@ -56,7 +69,9 @@ def edit_blog_post(post_id):
         return redirect(url_for('profile.index'))
 
     list_of_image = [0] * 3
-    for index, image in enumerate(session.query(ImagePoster).filter(ImagePoster.post_id == post_id)):
+    for index, image in enumerate(
+        session.query(ImagePoster).filter(ImagePoster.post_id == post_id)
+    ):
         list_of_image[index] = image
 
     if request.method == 'POST':
@@ -83,18 +98,22 @@ def edit_blog_post(post_id):
     return render_template('blog/edit.html', form=form)
 
 
-
-
 @blog_bp.route('/<int:post_id>/delete')
 @login_required
 def delete(post_id):
     session = create_session()
     post = session.query(Poster).get(post_id)
-    for image in session.query(ImagePoster).filter(ImagePoster.post_id == post.id):
+    for image in session.query(ImagePoster).filter(
+        ImagePoster.post_id == post.id
+    ):
         session.delete(image)
-    for comment in session.query(CommentPoster).filter(CommentPoster.post_id == post.id):
+    for comment in session.query(CommentPoster).filter(
+        CommentPoster.post_id == post.id
+    ):
         session.delete(comment)
-    for like in session.query(LikePoster).filter(LikePoster.post_id == post.id):
+    for like in session.query(LikePoster).filter(
+        LikePoster.post_id == post.id
+    ):
         session.delete(like)
     if not post:
         flash('Запись не найдена.', 'danger')
@@ -109,10 +128,27 @@ def poster_detail(post_id):
     form = CommentForm()
     session = create_session()
     poster = session.query(Poster).get(post_id)
-    images = [image.image for image in session.query(ImagePoster).filter(ImagePoster.post_id == post_id)]
-    comments = list(session.query(CommentPoster).filter(CommentPoster.post_id == post_id))
-    user_comments = list(map(lambda comment: session.query(User).filter(User.id == comment.user_id)[0], comments))
-    comments = [{"comment":comments[i], "user":user_comments[i]} for i in range(len(comments))]
+    images = [
+        image.image
+        for image in session.query(ImagePoster).filter(
+            ImagePoster.post_id == post_id
+        )
+    ]
+    comments = list(
+        session.query(CommentPoster).filter(CommentPoster.post_id == post_id)
+    )
+    user_comments = list(
+        map(
+            lambda comment: session.query(User).filter(
+                User.id == comment.user_id
+            )[0],
+            comments,
+        )
+    )
+    comments = [
+        {"comment": comments[i], "user": user_comments[i]}
+        for i in range(len(comments))
+    ]
     if form.validate_on_submit():
         new_comment = CommentPoster(
             text=form.text.data,
@@ -121,8 +157,13 @@ def poster_detail(post_id):
         )
         session.add(new_comment)
         session.commit()
-    return render_template('blog/poster_detail.html', poster=poster, form=form, images=images, comments=comments)
-
+    return render_template(
+        'blog/poster_detail.html',
+        poster=poster,
+        form=form,
+        images=images,
+        comments=comments,
+    )
 
 
 @blog_bp.route('/like/<int:post_id>', methods=['POST'])
@@ -130,10 +171,14 @@ def poster_detail(post_id):
 def like_poster(post_id):
     db_session = create_session()
     try:
-        like_user = db_session.query(LikePoster).filter(
-            LikePoster.post_id == post_id,
-            LikePoster.user_id == current_user.id
-        ).first()
+        like_user = (
+            db_session.query(LikePoster)
+            .filter(
+                LikePoster.post_id == post_id,
+                LikePoster.user_id == current_user.id,
+            )
+            .first()
+        )
 
         poster = db_session.query(Poster).get(post_id)
 
@@ -147,7 +192,9 @@ def like_poster(post_id):
                 poster.likes += 1
                 like_user.likes = 1
         else:
-            likes = LikePoster(post_id=post_id, user_id=current_user.id, likes=1)
+            likes = LikePoster(
+                post_id=post_id, user_id=current_user.id, likes=1
+            )
             db_session.add(likes)
             poster.likes += 1
 
@@ -167,10 +214,14 @@ def like_poster(post_id):
 def dislike_poster(post_id):
     db_session = create_session()
     try:
-        like_user = db_session.query(LikePoster).filter(
-            LikePoster.post_id == post_id,
-            LikePoster.user_id == current_user.id
-        ).first()
+        like_user = (
+            db_session.query(LikePoster)
+            .filter(
+                LikePoster.post_id == post_id,
+                LikePoster.user_id == current_user.id,
+            )
+            .first()
+        )
 
         poster = db_session.query(Poster).get(post_id)
 
@@ -184,7 +235,9 @@ def dislike_poster(post_id):
                 poster.dislikes += 1
                 like_user.likes = -1
         else:
-            likes = LikePoster(post_id=post_id, user_id=current_user.id, likes=-1)
+            likes = LikePoster(
+                post_id=post_id, user_id=current_user.id, likes=-1
+            )
             db_session.add(likes)
             poster.dislikes += 1
 
@@ -209,19 +262,33 @@ def all_blogs():
 
     if search_query:
         if search_type == 'content':
-            posts = session.query(Poster).filter(Poster.description.like(f'%{search_query}%')).all()
+            posts = (
+                session.query(Poster)
+                .filter(Poster.description.like(f'%{search_query}%'))
+                .all()
+            )
         else:
-            users = session.query(User).filter(User.name.like(f'%{search_query}%')).all()
+            users = (
+                session.query(User)
+                .filter(User.name.like(f'%{search_query}%'))
+                .all()
+            )
             for user in users:
-                posts = session.query(Poster).filter(Poster.user_id == user.id)
+                posts = session.query(Poster).filter(
+                    Poster.user_id == user.id
+                )
 
     for post in posts:
         images[post.id] = []
-        for image in session.query(ImagePoster).filter(ImagePoster.post_id == post.id):
+        for image in session.query(ImagePoster).filter(
+            ImagePoster.post_id == post.id
+        ):
             images[post.id].append(image.image)
 
-    return render_template('blog/all.html',
-                           posts=posts,
-                           images=images,
-                           search_query=search_query,
-                           search_type=search_type)
+    return render_template(
+        'blog/all.html',
+        posts=posts,
+        images=images,
+        search_query=search_query,
+        search_type=search_type,
+    )

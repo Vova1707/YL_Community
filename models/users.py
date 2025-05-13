@@ -14,14 +14,19 @@ class User(SqlAlchemyBase, UserMixin):
     surname = Column(String(50), nullable=False, default='surname')
     about = Column(Text, nullable=True, default='about')
     age = Column(Integer, nullable=True, default=52)
-    email = Column(String(120), unique=True, nullable=False, default='teach@mail.ru')
+    email = Column(
+        String(120), unique=True, nullable=False, default='teach@mail.ru'
+    )
     image_profile = Column(LargeBinary, nullable=True, default=None)
-    type = Column(Enum('teacher', 'student', 'admin', name='user_type'),
-                 nullable=False, default='student')
+    type = Column(
+        Enum('teacher', 'student', 'admin', name='user_type'),
+        nullable=False,
+        default='student',
+    )
     password_hash = Column(String(128), nullable=False)
 
     # Связи с другими моделями
-    posters = relationship( "Poster", back_populates="user")
+    posters = relationship("Poster", back_populates="user")
     comments = relationship("CommentPoster", back_populates="user")
     projects = relationship("Project", back_populates="user")
     programs = relationship("Program", back_populates="user")

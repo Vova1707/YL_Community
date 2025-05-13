@@ -1,7 +1,14 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Enum, LargeBinary
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    Text,
+    ForeignKey,
+    Enum,
+    LargeBinary,
+)
 from sqlalchemy.orm import relationship
 from db_session import SqlAlchemyBase
-from datetime import datetime
 
 
 class Project(SqlAlchemyBase):
@@ -12,7 +19,17 @@ class Project(SqlAlchemyBase):
     title = Column(String(100), nullable=False, default='title')
     description = Column(Text, nullable=True, default='description')
     # category = Column(Enum('web', 'mobile', 'data_science', name='project_category'), nullable=False)
-    category = Column(Enum('web', 'mobile', 'data_science', 'no_category', name='project_category'), default='no_category', nullable=True)
+    category = Column(
+        Enum(
+            'web',
+            'mobile',
+            'data_science',
+            'no_category',
+            name='project_category',
+        ),
+        default='no_category',
+        nullable=True,
+    )
     # type_file = Column(Enum('zip', 'rar'), nullable=True)
     file = Column(LargeBinary, nullable=True, default=None)
     file_tree = Column(LargeBinary, nullable=True, default=None)

@@ -1,7 +1,14 @@
 import os
 import uuid
 
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import (
+    Blueprint,
+    render_template,
+    redirect,
+    url_for,
+    request,
+    flash,
+)
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
 
@@ -15,6 +22,7 @@ from models.blog import ImagePoster, Subscribes_User
 
 
 profile_bp = Blueprint('profile', __name__, url_prefix='/profile')
+
 
 @profile_bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -30,29 +38,45 @@ def register():
 
         session = create_session()
         try:
-            existing_user = session.query(User).filter((User.email == email) | (User.name == username)).first()
+            existing_user = (
+                session.query(User)
+                .filter((User.email == email) | (User.name == username))
+                .first()
+            )
 
             if existing_user:
-                flash('Пользователь с таким email или именем уже существует.', 'danger')
+                flash(
+                    'Пользователь с таким email или именем уже существует.',
+                    'danger',
+                )
                 return render_template('register/register.html')
 
             hashed_password = generate_password_hash(password)
-            new_user = User(name=username, email=email, password_hash=hashed_password)  # Правильное присвоение значений экземпляру
+            new_user = User(
+                name=username, email=email, password_hash=hashed_password
+            )  # Правильное присвоение значений экземпляру
             session.add(new_user)
             session.commit()
 
-            flash('Регистрация прошла успешно! Пожалуйста, войдите.', 'success')
+            flash(
+                'Регистрация прошла успешно! Пожалуйста, войдите.', 'success'
+            )
             return redirect(url_for('profile.login'))
 
         except Exception as e:
             session.rollback()
-            flash(f'An error occurred: {str(e)}', 'danger')  # Show error to user.
-            return render_template('register/register.html') # Return to register page on error
+            flash(
+                f'An error occurred: {str(e)}', 'danger'
+            )  # Show error to user.
+            return render_template(
+                'register/register.html'
+            )  # Return to register page on error
 
         finally:
             session.close()  # Закрываем сессию в блоке finally
 
     return render_template('register/register.html')
+
 
 @profile_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -70,12 +94,14 @@ def login():
             return render_template('register/login.html')
     return render_template('register/login.html')
 
+
 @profile_bp.route('/logout')
 @login_required
 def logout():
     logout_user()
     flash('Вы вышли из системы.', 'info')
     return redirect(url_for('index'))
+
 
 @profile_bp.route('/')
 @profile_bp.route('/index')
@@ -87,19 +113,37 @@ def index(user_id=False):
         flash('Вы вошли в свой профиль.', 'info')
     user = session.query(User).filter(User.id == user_id).first()
     posts = session.query(Poster).filter(Poster.user_id == user_id)
-    subscribes = len(list(session.query(Subscribes_User).filter(Subscribes_User.user_id == user_id)))
+    subscribes = len(
+        list(
+            session.query(Subscribes_User).filter(
+                Subscribes_User.user_id == user_id
+            )
+        )
+    )
     projects = session.query(Project).filter(Project.user_id == user_id)
-    user_subscribe = session.query(Subscribes_User).filter(Subscribes_User.user_id == user_id,
-                                                           Subscribes_User.subscribes_user_id == int(current_user.id))
+    user_subscribe = session.query(Subscribes_User).filter(
+        Subscribes_User.user_id == user_id,
+        Subscribes_User.subscribes_user_id == int(current_user.id),
+    )
     if user_subscribe:
         user_subscribe = user_subscribe.first()
     images = {}
     for post in posts:
         images[post.id] = []
-        for image in session.query(ImagePoster).filter(ImagePoster.post_id == post.id):
+        for image in session.query(ImagePoster).filter(
+            ImagePoster.post_id == post.id
+        ):
             images[post.id].append(image.image)
 
-    return render_template('profile/profile.html', posts=posts, projects=projects, user=user, images=images, user_subscribe=user_subscribe, subscribes=subscribes)
+    return render_template(
+        'profile/profile.html',
+        posts=posts,
+        projects=projects,
+        user=user,
+        images=images,
+        user_subscribe=user_subscribe,
+        subscribes=subscribes,
+    )
 
 
 @profile_bp.route('/edit_profile')
@@ -117,7 +161,9 @@ def edit_profile():
             image_profile = form.image_profile.data
 
             session = create_session()
-            user = session.query(User).filter(User.id == current_user.id).first()
+            user = (
+                session.query(User).filter(User.id == current_user.id).first()
+            )
 
             user.name = name
             user.surname = surname
@@ -132,7 +178,10 @@ def edit_profile():
             flash('Профиль успешно обновлен!', 'success')
             return redirect(url_for('index'))
         else:
-            flash('Ошибка валидации формы. Проверьте введенные данные.', 'danger')
+            flash(
+                'Ошибка валидации формы. Проверьте введенные данные.',
+                'danger',
+            )
             return render_template('profile/profile_edit.html', form=form)
 
     elif request.method == "GET":
@@ -147,10 +196,14 @@ def edit_profile():
         return render_template('profile/profile_edit.html', form=form)
 
 
-@profile_bp.route('/add_subscribes_user/<int:user_id>/<int:subscribes_user_id>')
+@profile_bp.route(
+    '/add_subscribes_user/<int:user_id>/<int:subscribes_user_id>'
+)
 def add_subscribes_user(user_id, subscribes_user_id):
     session = create_session()
-    subscribes_user = Subscribes_User(subscribes_user_id=subscribes_user_id, user_id=user_id)
+    subscribes_user = Subscribes_User(
+        subscribes_user_id=subscribes_user_id, user_id=user_id
+    )
     session.add(subscribes_user)
     session.commit()
     return redirect(request.referrer)
@@ -159,19 +212,33 @@ def add_subscribes_user(user_id, subscribes_user_id):
 @profile_bp.route('/subscribes/<int:user_id>')
 def subscribes(user_id):
     session = create_session()
-    subscribes = session.query(Subscribes_User).filter(Subscribes_User.user_id == user_id)
+    subscribes = session.query(Subscribes_User).filter(
+        Subscribes_User.user_id == user_id
+    )
     users = []
     for subscribe in subscribes:
-        users.append(session.query(User).filter(User.id == subscribe.subscribes_user_id).first())
+        users.append(
+            session.query(User)
+            .filter(User.id == subscribe.subscribes_user_id)
+            .first()
+        )
         print(users)
     return render_template('profile/subscribes.html', users=users)
 
 
-
-@profile_bp.route('/delete_subscribes_user/<int:user_id>/<int:subscribes_user_id>')
+@profile_bp.route(
+    '/delete_subscribes_user/<int:user_id>/<int:subscribes_user_id>'
+)
 def delete_subscribes_user(user_id, subscribes_user_id):
     session = create_session()
-    subscribes_user = session.query(Subscribes_User).filter(Subscribes_User.subscribes_user_id == subscribes_user_id, Subscribes_User.user_id==user_id).first()
+    subscribes_user = (
+        session.query(Subscribes_User)
+        .filter(
+            Subscribes_User.subscribes_user_id == subscribes_user_id,
+            Subscribes_User.user_id == user_id,
+        )
+        .first()
+    )
     session.delete(subscribes_user)
     session.commit()
     return redirect(request.referrer)

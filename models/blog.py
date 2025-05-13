@@ -1,4 +1,13 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Enum, LargeBinary
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    Text,
+    DateTime,
+    ForeignKey,
+    Enum,
+    LargeBinary,
+)
 from sqlalchemy.orm import relationship
 from db_session import SqlAlchemyBase
 from datetime import datetime
@@ -12,7 +21,11 @@ class Poster(SqlAlchemyBase):
     title = Column(String(100), nullable=False, default='title')
     description = Column(Text, nullable=True, default='description')
     tags = Column(String(255), nullable=True, default='tags')
-    category = Column(Enum('news', 'article', 'event', name='poster_category'), nullable=False, default='news')
+    category = Column(
+        Enum('news', 'article', 'event', name='poster_category'),
+        nullable=False,
+        default='news',
+    )
     date_posted = Column(DateTime, default=datetime.now())
     likes = Column(Integer, default=0)
     dislikes = Column(Integer, default=0)
@@ -30,6 +43,7 @@ class ImagePoster(SqlAlchemyBase):
     image = Column(LargeBinary, nullable=True)
     post_id = Column(Integer, ForeignKey('poster.id'), nullable=False)
     post = relationship("Poster", back_populates="images")
+
 
 class CommentPoster(SqlAlchemyBase):
     __tablename__ = 'comments_poster'
@@ -54,6 +68,7 @@ class LikePoster(SqlAlchemyBase):
 
     post = relationship("Poster", back_populates="like")
     user = relationship("User", back_populates="like")
+
 
 class Subscribes_User(SqlAlchemyBase):
     __tablename__ = 'subscribes_user'

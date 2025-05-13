@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
 from db_session import SqlAlchemyBase
 
+
 class Program(SqlAlchemyBase):
     __tablename__ = 'programs'
     id = Column(Integer, primary_key=True, autoincrement=True)

@@ -14,7 +14,9 @@ def settings(app):
     app.config['PORT'] = int(os.environ.get('PORT', 8086))
 
     # Основные настройки
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your_default_secret_key')
+    app.config['SECRET_KEY'] = os.environ.get(
+        'SECRET_KEY', 'your_default_secret_key'
+    )
     app.config['DEBUG'] = os.environ.get('DEBUG', 'True').lower() == 'true'
 
     if app.config['DEBUG']:
@@ -22,10 +24,11 @@ def settings(app):
         app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
     # Имена баз данных
-    db_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'db', 'db.sqlite')
+    db_file = os.path.join(
+        os.path.abspath(os.path.dirname(__file__)), 'db', 'db.sqlite'
+    )
 
     # Путь до базы данных
     app.config['DATABASE_URI'] = os.environ.get('DATABASE_URI', f'{db_file}')
 
     app.jinja_env.filters['date'] = format_datetime
-
