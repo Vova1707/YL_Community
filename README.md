@@ -1,7 +1,8 @@
 [![CI](https://github.com/Vova1707/YL_Community/actions/workflows/tests.yml/badge.svg)](https://github.com/Vova1707/YL_Community/actions/workflows/tests.yml)
 
 <center>**YL Community**</center>
---
+-
+
 ## Описание
 ---
 YL Community - Это социальная сеть для учеников Яндекс Лицея и для всех, кто как то связан с Яндекс Образованием. 
