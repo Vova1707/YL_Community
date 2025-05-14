@@ -106,6 +106,7 @@ def logout():
 @profile_bp.route('/')
 @profile_bp.route('/index')
 @profile_bp.route('/other_profile/<int:user_id>')
+@login_required
 def index(user_id=False):
     session = create_session()
     if not user_id or user_id == current_user.id:

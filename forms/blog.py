@@ -8,7 +8,7 @@ from wtforms.validators import DataRequired
 
 
 class BlogForms(FlaskForm):
-    description = TextAreaField()
+    description = TextAreaField('Текст')
     images = MultipleFileField(
         'Загрузить изображения', render_kw={'multiple': True}, default=None
     )
