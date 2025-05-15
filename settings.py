@@ -17,7 +17,7 @@ def settings(app):
     app.config['SECRET_KEY'] = os.environ.get(
         'SECRET_KEY', 'your_default_secret_key'
     )
-    app.config['DEBUG'] = os.environ.get('DEBUG', 'True').lower() == 'true'
+    app.config['DEBUG'] = os.environ.get('DEBUG', 'False').lower() == 'true'
 
     if app.config['DEBUG']:
         toolbar = DebugToolbarExtension(app)
