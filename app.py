@@ -29,6 +29,8 @@ import random
 
 app = Flask(__name__)
 settings(app)
+app.jinja_env.globals['base64'] = base64
+global_init(app.config['DATABASE_URI'])
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'profile.login'
@@ -57,8 +59,11 @@ def index():
             )
         new_header, new_date = new_data[0][0], new_data[-1][0]
         news_data.append([new_header, new_data, new_date])
-    session = create_session()
-    posts = session.query(Poster).all()
+    try:
+        session = create_session()
+        posts = session.query(Poster).all()
+    except Exception as e:
+        raise Exception(f'{app.config['DATABASE_URI']}')
     images = {}
     for post in posts:
         images[post.id] = []
@@ -177,8 +182,6 @@ def documentation():
 
 
 if __name__ == '__main__':
-    app.jinja_env.globals['base64'] = base64
-    global_init(app.config['DATABASE_URI'])
     app.run(
         host=app.config['HOST'],
         port=app.config['PORT'],
