@@ -22,7 +22,6 @@ def global_init(db_file):
     except Exception as e:
         raise Exception(conn_str, e)
 
-
     import models.__all_models
 
     SqlAlchemyBase.metadata.create_all(engine)
