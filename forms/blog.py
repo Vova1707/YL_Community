@@ -1,8 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import (
-    SubmitField,
-    TextAreaField
-)
+from wtforms import SubmitField, TextAreaField
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from wtforms.validators import DataRequired
 
@@ -15,7 +12,7 @@ class BlogForms(FlaskForm):
         validators=[
             FileRequired(),
             # FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Только изображения!')
-        ]
+        ],
     )
     # images = MultipleFileField(
     #     'Загрузить изображения', render_kw={'multiple': True}, default=None
