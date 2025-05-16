@@ -69,8 +69,12 @@
                             const dataTransfer = new DataTransfer();
                             const formImage = document.getElementById('form-image');
                             blog_img_files.forEach(file => dataTransfer.items.add(file));
-                            console.log(dataTransfer.files);
                             formImage.files = dataTransfer.files;
+
+                            console.log(blog_img_files.length, blog_img_files);
+                            if (blog_img_files.length === 0) {
+                                document.getElementById("form-group-img").style.display = "block";
+                            }
                         };
 
                         imgWrapper.appendChild(imgPreview);
@@ -79,18 +83,13 @@
 
                         blog_img_files.push(file);
                         index_file += 1;
-                        console.log("ind:", index_file)
                     };
                     reader.readAsDataURL(file);
 
 
                 }
                 // e.target.value = '';
-                if (blog_img_files.length === 0) {
-                    document.getElementById("form-group-img").style.display = "display";
-                } else {
-                    document.getElementById("form-group-img").style.display = "none";
-                }
+                document.getElementById("form-group-img").style.display = "none";
             });
 
             {#function save_blog() {#}

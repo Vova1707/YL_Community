@@ -12,6 +12,7 @@ from db_session import create_session
 from models.blog import Poster, ImagePoster, CommentPoster, LikePoster
 from forms.blog import BlogForms, CommentForm
 from models.users import User
+import io
 
 blog_bp = Blueprint('blog', __name__, url_prefix='/blog')
 
@@ -70,7 +71,8 @@ def edit_blog_post(post_id):
         flash('Запись не найдена.', 'danger')
         return redirect(url_for('profile.index'))
 
-    list_of_image = [0] * 3
+    list_of_image = [0] * len(list(session.query(ImagePoster).filter(ImagePoster.post_id == post_id)))
+    print(list_of_image)
     for index, image in enumerate(
         session.query(ImagePoster).filter(ImagePoster.post_id == post_id)
     ):
@@ -83,7 +85,7 @@ def edit_blog_post(post_id):
 
         for index, image_form in enumerate(images):
             if image_form:
-                image_data = image_form.read()
+                image_data = io.BytesIO(image_form.data)
                 if list_of_image[index] != 0:
                     list_of_image[index].image = image_data
                 else:
