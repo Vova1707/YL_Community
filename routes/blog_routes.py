@@ -21,12 +21,14 @@ blog_bp = Blueprint('blog', __name__, url_prefix='/blog')
 def create_blog_post():
     form = BlogForms()
     if request.method == 'POST':
+        # img_data = request.form.get('blog_imgs')
+        # print("IMGS:", img_data, type(img_data))
         description = form.description.data
         session = create_session()
         blog_post = Poster(description=description, user_id=current_user.id)
         session.add(blog_post)
         session.commit()
-        images = form.images.data
+        images = request.files.getlist(form.images.name)
         session = create_session()
         for image in images:
             blog_post = max(session.query(Poster).all(), key=lambda s: s.id)

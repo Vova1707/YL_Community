@@ -10,66 +10,93 @@
             {{ form.description.label }}
             {{ form.description(class="form-control") }}
         </div>
-        <div class="form-group">
+        <div id="form-group-img" class="form-group">
             {{ form.images.label }}
             {{ form.images(class="form-control", id="form-image") }}
         </div>
-        <div id="image-result" style="margin-top: 20px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px;"></div>
+        <div id="image-result"  style="margin-top: 20px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px;"></div>
+{#        <a class="btn btn-primary" onclick="save_blog()">Проверить</a>#}
+        <button type="submit" class="btn btn-primary">Сохранить</button> <!--  onclick="save_blog()" -->
+        <a class="btn btn-secondary" href="{{ url_for('profile.index') }}">Отмена</a>
         <script>
-            var blog_imgs = [];
+            var blog_img_files = [];
 
             document.getElementById('form-image').addEventListener('change', function(e) {
-                let file = e.target.files; // Получаем все выбранные файлы
-                if (!file || file.length === 0) return;
+                const files = e.target.files; // Получаем все выбранные файлы
+                if (!files || files.length === 0) return;
 
-                file = file[0];
                 const previewContainer = document.getElementById('image-result');
 
-                if (!file.type.startsWith('image/')) {
-                    console.warn(`Файл "${file.name}" не является изображением`);
-                    return;
+                let index_file = 0;
+                for (const file of files) {
+                    if (!file.type.startsWith('image/')) {
+                        console.warn(`Файл "${file.name}" не является изображением. Пропускаем.`);
+                        continue;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+
+                        const base64Data = e.target.result;
+
+                        const imgWrapper = document.createElement('div');
+                        imgWrapper.style.position = 'relative';
+                        imgWrapper.style.width = "fit-content";
+
+                        const imgPreview = document.createElement('img');
+                        imgPreview.src = base64Data;
+                        imgPreview.style.maxWidth = '100%';
+                        imgPreview.style.height = '300px';
+                        imgPreview.style.borderRadius = '10px';
+
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.textContent = 'X';
+                        deleteBtn.style.fontSize = "22px";
+                        deleteBtn.style.position = 'absolute';
+                        deleteBtn.style.width = "30px";
+                        deleteBtn.style.height = "30px";
+                        deleteBtn.style.top = '0';
+                        deleteBtn.style.right = '0';
+                        deleteBtn.className = 'btn-danger';
+                        deleteBtn.style.border = 'none';
+                        deleteBtn.style.borderRadius = '10px';
+                        deleteBtn.style.cursor = 'pointer';
+                        deleteBtn.onclick = function() {
+                            imgWrapper.remove();
+
+                            blog_img_files = blog_img_files.filter(item => file !== item);
+                            // blog_img_files.splice(index_file, 1);
+                            const dataTransfer = new DataTransfer();
+                            const formImage = document.getElementById('form-image');
+                            blog_img_files.forEach(file => dataTransfer.items.add(file));
+                            console.log(dataTransfer.files);
+                            formImage.files = dataTransfer.files;
+                        };
+
+                        imgWrapper.appendChild(imgPreview);
+                        imgWrapper.appendChild(deleteBtn);
+                        previewContainer.appendChild(imgWrapper);
+
+                        blog_img_files.push(file);
+                        index_file += 1;
+                        console.log("ind:", index_file)
+                    };
+                    reader.readAsDataURL(file);
+
+
                 }
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const base64Data = e.target.result;
-
-                    const imgWrapper = document.createElement('div');
-                    imgWrapper.style.position = 'relative';
-                    imgWrapper.style.width = "fit-content";
-
-                    const imgPreview = document.createElement('img');
-                    imgPreview.src = base64Data;
-                    imgPreview.style.maxWidth = '100%';
-                    imgPreview.style.height = '300px';
-                    imgPreview.style.borderRadius = '10px';
-
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.textContent = 'X';
-                    deleteBtn.style.fontSize = "22px";
-                    deleteBtn.style.position = 'absolute';
-                    deleteBtn.style.width = "30px";
-                    deleteBtn.style.height = "30px";
-                    deleteBtn.style.top = '0';
-                    deleteBtn.style.right = '0';
-                    deleteBtn.className = 'btn-danger';
-                    deleteBtn.style.border = 'none';
-                    deleteBtn.style.borderRadius = '10px';
-                    deleteBtn.style.cursor = 'pointer';
-                    deleteBtn.onclick = function() { imgWrapper.remove(); };
-
-                    imgWrapper.appendChild(imgPreview);
-                    imgWrapper.appendChild(deleteBtn);
-                    previewContainer.appendChild(imgWrapper);
-                };
-
-                reader.readAsDataURL(file);
-
-                blog_imgs.push(file)
-                console.log(blog_imgs)
-                e.target.value = '';
+                // e.target.value = '';
+                if (blog_img_files.length === 0) {
+                    document.getElementById("form-group-img").style.display = "display";
+                } else {
+                    document.getElementById("form-group-img").style.display = "none";
+                }
             });
+
+            {#function save_blog() {#}
+            {#    const blog_imgs_input = document.getElementById("blog_imgs_input");#}
+            {#    blog_imgs_input.value = JSON.stringify(blog_imgs); // JSON.stringify(blog_imgs);#}
+            {#    console.log(blog_imgs_input.value);#}
         </script>
-        <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
 {% endblock %}
