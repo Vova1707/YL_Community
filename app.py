@@ -63,7 +63,7 @@ def index():
         session = create_session()
         posts = session.query(Poster).all()
     except Exception as e:
-        raise Exception(f'{app.config['DATABASE_URI']}')
+        raise Exception(f"{app.config['DATABASE_URI']}")
     images = {}
     for post in posts:
         images[post.id] = []
