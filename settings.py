@@ -29,6 +29,6 @@ def settings(app):
     )
 
     # Путь до базы данных
-    app.config['DATABASE_URI'] = os.environ.get('DATABASE_URI', db_file)
+    app.config['DATABASE_URI'] = os.environ.get('DATABASE_URI', f'{db_file}')
 
     app.jinja_env.filters['date'] = format_datetime
