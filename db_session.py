@@ -14,7 +14,7 @@ def global_init(db_file):
     if __factory:
         return
 
-    conn_str = f'sqlite:///{db_file.strip()}?check_same_thread=False'
+    conn_str = f'sqlite:////opt/build/db/db.sqlite'
     print(f"Подключение к базе данных по адресу {conn_str}")
 
     engine = sa.create_engine(conn_str, echo=False)
