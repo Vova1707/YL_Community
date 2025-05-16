@@ -59,8 +59,11 @@ def index():
             )
         new_header, new_date = new_data[0][0], new_data[-1][0]
         news_data.append([new_header, new_data, new_date])
-    session = create_session()
-    posts = session.query(Poster).all()
+    try:
+        session = create_session()
+        posts = session.query(Poster).all()
+    except Exception as e:
+        raise Exception(f'{app.config['DATABASE_URI']}')
     images = {}
     for post in posts:
         images[post.id] = []
