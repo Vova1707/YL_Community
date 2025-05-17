@@ -31,6 +31,7 @@ app = Flask(__name__)
 settings(app)
 app.jinja_env.globals['base64'] = base64
 logging.info(f"База данных {app.config['DATABASE_URI']}")
+
 global_init(app.config['DATABASE_URI'])
 
 login_manager = LoginManager(app)
