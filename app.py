@@ -19,7 +19,7 @@ from settings import settings
 from db_session import global_init, create_session
 from models.users import User
 from models.blog import Poster, ImagePoster
-
+import logging
 import base64
 import os
 import uuid
@@ -30,6 +30,7 @@ import random
 app = Flask(__name__)
 settings(app)
 app.jinja_env.globals['base64'] = base64
+logging.info(f'База данных {app.config['DATABASE_URI']}')
 global_init(app.config['DATABASE_URI'])
 
 login_manager = LoginManager(app)
