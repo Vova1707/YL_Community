@@ -53,6 +53,8 @@ app.register_blueprint(forum_bp)
 
 @app.route('/')
 def index():
+    settings(app)
+    global_init(app.config['DATABASE_URI'])
     news_data = []
     for name_file in ["test_new_1", "test_new_2"]:
         with open(f"static/txt/{name_file}.txt", "r", encoding="utf-8") as f:
