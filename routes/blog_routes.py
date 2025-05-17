@@ -71,7 +71,11 @@ def edit_blog_post(post_id):
         flash('Запись не найдена.', 'danger')
         return redirect(url_for('profile.index'))
 
-    list_of_image = [0] * len(list(session.query(ImagePoster).filter(ImagePoster.post_id == post_id)))
+    list_of_image = [0] * len(
+        list(
+            session.query(ImagePoster).filter(ImagePoster.post_id == post_id)
+        )
+    )
     print(list_of_image)
     for index, image in enumerate(
         session.query(ImagePoster).filter(ImagePoster.post_id == post_id)
