@@ -28,8 +28,8 @@ import markdown
 import random
 
 app = Flask(__name__)
-global_init(app.config['DATABASE_URI'])
 settings(app)
+global_init(app.config['DATABASE_URI'])
 app.jinja_env.globals['base64'] = base64
 
 

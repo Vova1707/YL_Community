@@ -15,8 +15,7 @@ def global_init(db_file):
     if __factory != None:
         return
 
-    conn_str = 'sqlite:///blog.db'
-    #conn_str = 'sqlite:///opt/build/db/db.sqlite'
+    conn_str = f'sqlite:///{db_file.strip()}?check_same_thread=False'
     print(f"Подключение к базе данных по адресу {conn_str}")
 
     engine = sa.create_engine(conn_str, echo=False)
@@ -29,4 +28,7 @@ def global_init(db_file):
 
 def create_session():
     global __factory
+    if __factory == None:
+        open('blog.db', "w").close()
+        global_init('blog.db')
     return __factory()
