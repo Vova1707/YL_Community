@@ -30,5 +30,8 @@ def create_session():
     #global __factory
     engine = sa.create_engine("sqlite:///db1.sqlite?check_same_thread=False")
     SqlAlchemyBase.metadata.create_all(engine)
-    return Session(engine)
+    ss = Session(engine)
+    if ss == None:
+        return 1
+    return ss
     #return __factory()
