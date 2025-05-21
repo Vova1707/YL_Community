@@ -27,10 +27,8 @@ def global_init(db_file):
 
 
 def create_session():
-    global __factory
-    engine = sa.create_engine("sqlite:///C:\\Users\konde\PycharmProjects\LyceumProjectFlask\db\db.sqlite?check_same_thread=False")
-    if __factory == None:
-        open('blog.db', "w").close()
-        global_init('blog.db')
+    #global __factory
+    engine = sa.create_engine("sqlite:///db1.sqlite?check_same_thread=False")
+    SqlAlchemyBase.metadata.create_all(engine)
     return Session(engine)
-    return __factory()
+    #return __factory()
